@@ -1,15 +1,18 @@
 <template>
   <div id="app">
     <myheader></myheader>
+    <tab></tab>
   </div>
 </template>
 
 <script>
 import myheader from './components/header.vue'
+import tab from './components/tab/tab.vue'
 export default {
   name: 'App',
   components:{
     myheader,
+    tab
   }
 }
 </script>

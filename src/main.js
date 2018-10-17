@@ -6,6 +6,8 @@ import router from './router'
 import './commom/stylus/index.styl'
 import 'babel-polyfill'
 import fastclick from 'fastclick'
+import Swiper from 'swiper'
+
 fastclick.attach(document.body);
 Vue.config.productionTip = false
 
