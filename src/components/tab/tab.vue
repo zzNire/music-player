@@ -1,14 +1,12 @@
 <template>
   <div class="tab">
+    <div class="tab-tab">
     <ul class="tab-ul">
-      <li class="tab-item"
-      :class="{'itemActive':nowIndex === index}"
-      @click="changeTab(index)"
-       v-for="(item,index) in list">
+      <li class="tab-item" :class="{'itemActive':nowIndex === index}" @click="changeTab(index)" v-for="(item,index) in list">
         {{item.name}}
       </li>
     </ul>
-
+    </div>
     <div class="swiper-container">
 
       <div class="swiper-wrapper">
@@ -50,7 +48,7 @@
         componentList: [{
             path: '/recommend',
             component: recommend,
-            
+
           },
           {
             path: '/rank',
@@ -69,13 +67,12 @@
       }
     },
     mounted() {
-        let i;
-      for(i=0;i<this.componentList.length;i++)
-        {
-           
-          if(this.$route.path === this.componentList[i].path)
+      let i;
+      for (i = 0; i < this.componentList.length; i++) {
+
+        if (this.$route.path === this.componentList[i].path)
           break;
-        }
+      }
       this.nowIndex = i;
       if (!this.mySwiper) {
         this.mySwiper = new Swiper(".swiper-container", {
@@ -88,28 +85,30 @@
 
         });
         this.mySwiper.scrollbar.$el.css({
-            'background':'rgb(212,68,57)',
-            'height':'3px'});
+          'background': 'rgb(212,68,57)',
+          'height': '3px'
+        });
         let drag = this.mySwiper.scrollbar.$dragEl;
         drag.css({
           'background': 'white',
           'height': '3px',
-         
+
         });
         drag.css({
-          'border-radius': '30%',
-          'box-sizing':'border-box',
-         //假装缩短滚动条 其实长度未变 只是将左右边框设为白色 
-         'border-left':'solid rgb(212,68,57) 25px',
-         'border-right':'solid rgb(212,68,57) 25px',
+          'border-radius': '0',
+          'box-sizing': 'border-box',
+          //假装缩短滚动条 其实长度未变 只是将左右边框设为白色 
+          'border-left': 'solid rgb(212,68,57) 25px',
+          'border-right': 'solid rgb(212,68,57) 25px',
+
 
         });
       }
       this.mySwiper.on('slideChange', () => {
-          let index = this.mySwiper.activeIndex;
-          this.nowIndex = index;
-          this.$router.push(this.componentList[index].path);
-        });
+        let index = this.mySwiper.activeIndex;
+        this.nowIndex = index;
+        this.$router.push(this.componentList[index].path);
+      });
     },
     methods: {
       changeTab(index) {
@@ -120,13 +119,12 @@
     watch: {
       '$route'(to, from) {
         console.log(to.path + from.path);
-        console.log( this.componentList[0].path);
+        console.log(this.componentList[0].path);
         let i;
-        for(i=0;i<this.componentList.length;i++)
-        {
-           
-          if(to.path === this.componentList[i].path)
-          break;
+        for (i = 0; i < this.componentList.length; i++) {
+
+          if (to.path === this.componentList[i].path)
+            break;
         }
         this.mySwiper.slideTo(i);
       }
@@ -140,7 +138,7 @@
   @import '../../commom/stylus/variable.styl';
 
   .tab-ul {
-  
+
     width: 100%;
     background: $color-sub-theme;
   }
@@ -153,21 +151,26 @@
     display: inline-block;
     color: $color-text-l;
   }
-  .itemActive{
-      color :white;
-      font-weight :600;}
 
-.swiper-container{
-    padding:10px 0;}
+  .itemActive {
+    color: white;
+    font-weight: 600;
+  }
 
-.swiper-scrollbar{
-    padding :5px 0px;
-    border-radius :0px;
-    }
-    .swiper-scrollbar{
-        width :100%
-        position :absolute;
-        top:0px;
-        left :0px;
-        }
+  .swiper-container {
+    position: relative;
+  }
+.swiper-wrapper{
+  padding-top:16px;
+}
+  .swiper-scrollbar {
+    padding: 5px 0px;
+    border-radius: 0px;
+     width: 100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+  }
+
+
 </style>
