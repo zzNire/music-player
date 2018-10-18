@@ -1,10 +1,16 @@
 <template>
   <div class="recommend">
-    <div class="swiper-contianer">
-
+    <div v-if="recommends.slider.length" class="swiper-contianer">
+        <slider>
+          <div class="slider-div" v-for="recommend in recommends.slider">
+            <a class="slider-a" :href="recommend.linkUrl">
+              <img class="slider-img" :src="recommend.picUrl">
+            </a>
+          </div>
+        </slider>
     </div>
     <div class="recommend-song">
-      <p class="recommend-title">推荐歌曲></p>
+      <p class="recommend-title">推荐歌单 ></p>
     </div>
   </div>
 
@@ -14,7 +20,19 @@
 <script>
 const ERR_OK = 0;
 import {getRecommend} from '../../api/recommend.js'
+import Slider from '../../base/slider/slider.vue'
+
   export default {
+    components:{
+      Slider,
+    },
+    data(){
+      return{
+        recommends:{
+          slider:[],
+        },
+      }
+    },
       created(){
         this._getRecommend();
       },
@@ -24,6 +42,8 @@ import {getRecommend} from '../../api/recommend.js'
                   if(res.code === ERR_OK)
                   {
                     console.log(res.data);
+                    this.recommends = res.data;
+                    console.log(this.recommends.slider.length);
                   }
               });
           }
@@ -46,6 +66,16 @@ import {getRecommend} from '../../api/recommend.js'
     font-weight :600;
   }
 
-
+.slider-div{
+  
+ 
+}
+.slider-a{
+  width :100%;
+}
+.slider-img{
+  width :100%;
+ 
+}
 
 </style>
