@@ -161,7 +161,7 @@
     position: relative;
   }
 .swiper-wrapper{
-  padding-top:16px;
+  padding-top:13px;
 }
   .swiper-scrollbar {
     padding: 5px 0px;

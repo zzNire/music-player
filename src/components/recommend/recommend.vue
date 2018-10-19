@@ -1,7 +1,9 @@
 <template>
+<div class="recommend-content">
+  <div class="background-block"></div>
   <div class="recommend">
     <div v-if="recommends.slider.length" class="swiper-contianer">
-        <slider>
+        <slider class="slider">
           <div class="slider-div" v-for="recommend in recommends.slider">
             <a class="slider-a" :href="recommend.linkUrl">
               <img class="slider-img" :src="recommend.picUrl">
@@ -13,7 +15,7 @@
       <p class="recommend-title">推荐歌单 ></p>
     </div>
   </div>
-
+</div>
 </template>
 
 
@@ -56,26 +58,40 @@ import Slider from '../../base/slider/slider.vue'
 <style lang="stylus" scoped>
   @import '../../commom/stylus/variable.styl';
   
-
-  .recommend {}
-
+.recommend-content{
+  position :relative;
+  margin-top:10px;
+}
+  .recommend {
+   
+  }
+.background-block{
+  top:-10px;
+  position :absolute;
+  width:100%;
+  height :120px;
+  background :$color-sub-theme;
+}
   .recommend-title {
     color: $color-highlight-background;
-    margin :10px;
+    margin :10px 0;
     font-size :14px;
     font-weight :600;
   }
-
+.slider{
+}
 .slider-div{
-  
+ padding :0 10px;
  
 }
 .slider-a{
   width :100%;
+  
 }
 .slider-img{
   width :100%;
- 
+  border-radius :10px;
+  
 }
 
 </style>
