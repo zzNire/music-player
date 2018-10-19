@@ -129,7 +129,10 @@
          this.scrollSlider.next();
         }, this.interval);
       }
-    }
+    },
+    destroyed() {
+        clearTimeout(this.timer);
+    },
   }
 
 </script>

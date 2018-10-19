@@ -1,8 +1,8 @@
 <template>
-<div class="recommend-content">
-  <div class="background-block"></div>
-  <div class="recommend">
-    <div v-if="recommends.slider.length" class="swiper-contianer">
+  <div class="recommend-content">
+    <div class="background-block"></div>
+    <div class="recommend">
+      <div v-if="recommends.slider.length" class="swiper-contianer">
         <slider class="slider">
           <div class="slider-div" v-for="recommend in recommends.slider">
             <a class="slider-a" :href="recommend.linkUrl">
@@ -10,46 +10,77 @@
             </a>
           </div>
         </slider>
-    </div>
-    <div class="recommend-song">
-      <p class="recommend-title">推荐歌单 ></p>
+      </div>
+      <div class="recommend-song">
+        <p class="recommend-title">推荐歌单 ></p>
+        <div class="recommend-item" v-for="item in recommends.songList">
+          <a class="recommend-a">
+            <div class="img-div">
+              <img class="icon" :src="item.picUrl">
+            </div>
+            <p class="name" v-html="item.songListDesc">{{item.songListDesc}}</p>
+
+            <p class="play-num"><i class="icon-play-mini"></i>{{item.accessnum |translateNum}}</p>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 
 <script>
-const ERR_OK = 0;
-import {getRecommend} from '../../api/recommend.js'
-import Slider from '../../base/slider/slider.vue'
+  const ERR_OK = 0;
+  import {
+    getRecommend,
+    getDiscList
+  } from '../../api/recommend.js'
+  import Slider from '../../base/slider/slider.vue'
 
   export default {
-    components:{
+    components: {
       Slider,
     },
-    data(){
-      return{
-        recommends:{
-          slider:[],
+    data() {
+      return {
+        recommends: {
+          slider: [],
         },
       }
     },
-      created(){
-        this._getRecommend();
-      },
-      methods:{
-          _getRecommend(){
-              getRecommend().then((res)=>{
-                  if(res.code === ERR_OK)
-                  {
-                    console.log(res.data);
-                    this.recommends = res.data;
-                    console.log(this.recommends.slider.length);
-                  }
-              });
+    created() {
+      this._getRecommend();
+      // this._getDescList();
+    },
+    methods: {
+      _getRecommend() {
+        getRecommend().then((res) => {
+          if (res.code === ERR_OK) {
+            console.log(res.data);
+            this.recommends = res.data;
+            console.log(this.recommends.slider.length);
           }
-      }
+        });
+      },
+      _getDescList() {
+        getDiscList().then((res) => {
+          console.log(res);
+        });
+      },
+
+    },
+    filters: {
+      translateNum(value) {
+        console.log(value);
+        let translateNum = 0;
+        if (value >= 10000) {
+          translateNum = Math.round(value / 10000);
+          return translateNum + '万';
+        } else {
+          return value;
+        }
+      },
+    }
   }
 
 </script>
@@ -57,41 +88,125 @@ import Slider from '../../base/slider/slider.vue'
 
 <style lang="stylus" scoped>
   @import '../../commom/stylus/variable.styl';
-  
-.recommend-content{
-  position :relative;
-  margin-top:10px;
-}
-  .recommend {
-   
+
+  .recommend-content {
+    position: relative;
+    margin-top: 10px;
+    color: $color-highlight-background;
   }
-.background-block{
-  top:-10px;
-  position :absolute;
-  width:100%;
-  height :120px;
-  background :$color-sub-theme;
-}
+
+  .recommend {}
+
+  .background-block {
+    top: -10px;
+    position: absolute;
+    width: 100%;
+    height: 120px;
+    background: $color-sub-theme;
+  }
+
+  .recommend-song {
+    margin: 10px;
+  }
+
   .recommend-title {
     color: $color-highlight-background;
-    margin :10px 0;
-    font-size :14px;
-    font-weight :600;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
   }
-.slider{
+
+  .slider {}
+
+  .slider-div {
+    padding: 0 10px;
+
+  }
+
+  .slider-a {
+    width: 100%;
+
+  }
+
+  .slider-img {
+    width: 100%;
+    border-radius: 10px;
+
+  }
+
+
+  .recommend-item {
+    position: relative;
+    display: inline-block;
+    width: 33.33%;
+    padding-right: 3px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+  }
+
+  .recommend-a {}
+
+  .img-div {
+    padding-bottom: 100%;
+    position: relative;
+  }
+
+  .icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border-radius: 5px;
+  }
+
+  .name,
+  .play-num,
+  .author {
+    font-size: 12px;
+    line-height: 13px;
+    color: $color-highlight-background;
+  }
+
+  .name {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 15px;
+    font-size: 13px;
+    margin-top: 5px;
+    letter-spacing: 1px;
+    padding-left: 3px;
+    height: 30px;
+    margin-bottom :15px;
+  }
+
+.icon-play-mini{
+    margin-right :3px;
+    display :inline-block;
+    height:13px;
+    width:13px;
+    line-height :13px;
+    vertical-align :middle;
 }
-.slider-div{
- padding :0 10px;
+  .icon-play-mini:before {
+   
+    content: "\e903"
+   
  
-}
-.slider-a{
-  width :100%;
-  
-}
-.slider-img{
-  width :100%;
-  border-radius :10px;
-  
-}
+  }
+
+  .play-num {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    color: #fff;
+    font-size: 12px;
+    letter-spacing: 1px;
+    text-shadow: 1px 0 0 rgba(0, 0, 0, .15);
+   
+
+  }
 
 </style>
