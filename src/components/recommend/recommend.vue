@@ -1,30 +1,51 @@
 <template>
   <div class="recommend-content">
-    <div class="background-block"></div>
-    <div class="recommend">
-      <div v-if="recommends.slider.length" class="swiper-contianer">
-        <slider class="slider">
-          <div class="slider-div" v-for="recommend in recommends.slider">
-            <a class="slider-a" :href="recommend.linkUrl">
-              <img class="slider-img" :src="recommend.picUrl">
-            </a>
+    <scroll class='recommend-scroll' :data="recommends" :probe-type="3"
+    @changeLocation='changeXY'
+    @isAllowSwipe="isAllowSwiper">
+      <div class = "scroll-content">
+        
+        <div class="recommend">
+          <div v-if="recommends.slider.length" class="swiper-contianer" >
+            <div class="background-block" ref="backBlock"></div>
+            <slider class="slider" ref="slider" >
+              <div class="slider-div" v-for="recommend in recommends.slider">
+                <a class="slider-a" :href="recommend.linkUrl">
+                  <img class="slider-img" :src="recommend.picUrl">
+                </a>
+              </div>
+            </slider>
           </div>
-        </slider>
-      </div>
-      <div class="recommend-song">
-        <p class="recommend-title">推荐歌单 ></p>
-        <div class="recommend-item" v-for="item in recommends.songList">
-          <a class="recommend-a">
-            <div class="img-div">
-              <img class="icon" :src="item.picUrl">
-            </div>
-            <p class="name" v-html="item.songListDesc">{{item.songListDesc}}</p>
+          <div class="recommend-song">
+            <p class="recommend-title">推荐歌单 ></p>
+            <div class="recommend-item" v-for="item in recommends.songList">
+              <a class="recommend-a">
+                <div class="img-div">
+                  <img class="icon" :src="item.picUrl">
+                </div>
+                <p class="name" v-html="item.songListDesc">{{item.songListDesc}}</p>
 
-            <p class="play-num"><i class="icon-play-mini"></i>{{item.accessnum |translateNum}}</p>
-          </a>
+                <p class="play-num"><i class="icon-play-mini"></i>{{item.accessnum |translateNum}}</p>
+              </a>
+            </div>
+          </div>
+          <div class="recommend-song">
+            <p class="recommend-title">最新音乐 ></p>
+            <div class="recommend-item" v-for="item in recommends.songList">
+              <a class="recommend-a">
+                <div class="img-div">
+                  <img class="icon" :src="item.picUrl">
+                </div>
+                <p class="name" v-html="item.songListDesc">{{item.songListDesc}}</p>
+
+                <p class="play-num"><i class="icon-play-mini"></i>{{item.accessnum |translateNum}}</p>
+              </a>
+            </div>
+          </div>
+          
         </div>
       </div>
-    </div>
+    </scroll>
   </div>
 </template>
 
@@ -36,21 +57,28 @@
     getDiscList
   } from '../../api/recommend.js'
   import Slider from '../../base/slider/slider.vue'
+  import Scroll from '../../base/scroll/scroll.vue'
 
   export default {
     components: {
       Slider,
+      Scroll,
     },
     data() {
       return {
         recommends: {
           slider: [],
+          allowSwiper:true,
         },
       }
     },
     created() {
       this._getRecommend();
-      // this._getDescList();
+      this._getDescList();
+    },
+    mounted(){
+      
+      
     },
     methods: {
       _getRecommend() {
@@ -58,20 +86,36 @@
           if (res.code === ERR_OK) {
             console.log(res.data);
             this.recommends = res.data;
-            console.log(this.recommends.slider.length);
+            //console.log(this.recommends.slider.length);
           }
         });
       },
-      _getDescList() {
+      _getDescList() { 
+        console.log('getDiscList');
         getDiscList().then((res) => {
+          
           console.log(res);
         });
       },
+      changeXY(pos){
+          if(pos.y>=0)
+          return ;
+          //console.log(this.$refs.backBlock.offsetHeight);
+          let top = -Math.floor(this.$refs.backBlock.offsetHeight * 1.25/2);
+         // console.log(this.$refs.backBlock);
+          //console.log('offset'+top);
+          top = top + Math.floor(pos.y);
+          this.$refs.backBlock.style.top = top + 'px';
+          //console.log('change Y to' + this.$refs.backBlock.offsetTop);
+      },
+      isAllowSwiper(isAllow){
+        this.$emit('tabIsSwiper',isAllow);
+      }
 
     },
     filters: {
       translateNum(value) {
-        console.log(value);
+        //console.log(value);
         let translateNum = 0;
         if (value >= 10000) {
           translateNum = Math.round(value / 10000);
@@ -91,19 +135,20 @@
 
   .recommend-content {
     position: relative;
-    margin-top: 10px;
+   
     color: $color-highlight-background;
+     width :100%;
+     height :100%;
+    
   }
-
+.recommend-scroll{
+ height :100%;
+}
   .recommend {}
+.scroll-content{
+ 
+}
 
-  .background-block {
-    top: -10px;
-    position: absolute;
-    width: 100%;
-    height: 120px;
-    background: $color-sub-theme;
-  }
 
   .recommend-song {
     margin: 10px;
@@ -115,7 +160,19 @@
     font-size: 14px;
     font-weight: 600;
   }
+.swiper-contianer{
+  position :relative;
+  padding-top:10px;
+}
 
+  .background-block {
+    top: -125%;
+    position: absolute;
+    width: 100%;
+    height: 200%;
+    background: $color-sub-theme;
+   
+  }
   .slider {}
 
   .slider-div {
@@ -179,22 +236,23 @@
     letter-spacing: 1px;
     padding-left: 3px;
     height: 30px;
-    margin-bottom :15px;
+    margin-bottom: 15px;
   }
 
-.icon-play-mini{
-    margin-right :3px;
-    display :inline-block;
-    height:13px;
-    width:13px;
-    line-height :13px;
-    vertical-align :middle;
-}
+  .icon-play-mini {
+    margin-right: 3px;
+    display: inline-block;
+    height: 13px;
+    width: 13px;
+    line-height: 13px;
+    vertical-align: middle;
+  }
+
   .icon-play-mini:before {
-   
+
     content: "\e903"
-   
- 
+
+
   }
 
   .play-num {
@@ -205,8 +263,6 @@
     font-size: 12px;
     letter-spacing: 1px;
     text-shadow: 1px 0 0 rgba(0, 0, 0, .15);
-   
-
   }
 
 </style>

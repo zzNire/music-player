@@ -18,29 +18,16 @@ export function getRecommend() {
 export function getDiscList() {
   const url = '/api/getDiscList'
   const data = Object.assign({}, commonParam, {
-    g_tk: 5381,
-    uin: 0,
-    format: 'json',
-    inCharset: 'utf-8',
-    outCharset: 'utf-8',
-    notice: 0,
-    platform: 'h5',
-    needNewCode: 1,
-    //w: query,
-    zhidaqu: 1,
-    //catZhida: zhida ? 1 : 0,
-    t: 0,
-    flag: 1,
-    ie: 'utf-8',
-    sem: 1,
-    aggr: 0,
-    //perpage: perpage,
-    n: 20,
-   // p: page,
-    remoteplace: 'txt.mqq.all',
-    _: 1537612841753
+    platform: 'yqq',
+    hostUin: 0,
+    sin: 0,
+    ein: 29,
+    sortId: 5,
+    needNewCode: 0,
+    categoryId: 10000000,
+    rnd: Math.random(),
+    format: 'json'
   })
-
   return axios.get(url, {
     params: data
   }).then((res) => {

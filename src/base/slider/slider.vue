@@ -43,7 +43,8 @@
       interval: { //翻页时间
         type: Number,
         default: 4000,
-      }
+      },
+      
 
     },
     mounted() {
@@ -71,10 +72,10 @@
       _setSliderWidth(isResize) {
           
         this.children = this.$refs.sliderGroup.children;
-        console.log(this.children);
+        //console.log(this.children);
         let width = 0;
         let sliderWidth = this.$refs.sliderSwipper.clientWidth;
-        console.log(sliderWidth);
+        //console.log(sliderWidth);
         for (let i = 0; i < this.children.length; i++) {
           //console.log('this.child.className');
           let child = this.children[i];
@@ -87,7 +88,7 @@
         if (this.loop && !isResize) {
           width += 2 * sliderWidth;
         }
-        console.log(width);
+        //console.log(width);
         this.$refs.sliderGroup.style.width = width + 'px';
       },
       _initSlider() {
@@ -133,6 +134,7 @@
     destroyed() {
         clearTimeout(this.timer);
     },
+    
   }
 
 </script>

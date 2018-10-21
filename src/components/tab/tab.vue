@@ -8,11 +8,10 @@
     </ul>
     </div>
     <div class="swiper-container">
-
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="(item, index) in componentList">
           <keep-alive>
-            <component :is="item.component"></component>
+            <component :is="item.component" @tabIsSwiper='tabIsSwiper'></component>
           </keep-alive>
         </div>
       </div>
@@ -114,12 +113,16 @@
       changeTab(index) {
         console.log(index);
         this.mySwiper.slideTo(index);
+      },
+      tabIsSwiper(isAllow){
+        this.mySwiper.allowTouchMove = isAllow;
+        console.log(isAllow);
       }
     },
     watch: {
       '$route'(to, from) {
-        console.log(to.path + from.path);
-        console.log(this.componentList[0].path);
+        //console.log(to.path + from.path);
+        //console.log(this.componentList[0].path);
         let i;
         for (i = 0; i < this.componentList.length; i++) {
 
@@ -157,11 +160,19 @@
     font-weight: 600;
   }
 
+.swiper-slide{
+  
+}
   .swiper-container {
-    position: relative;
+    position: fixed;
+    top:70px;
+    bottom :0px;
+    width:100%;
+    padding-top:10px;
   }
 .swiper-wrapper{
-  padding-top:13px;
+  
+ 
 }
   .swiper-scrollbar {
     padding: 5px 0px;
