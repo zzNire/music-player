@@ -23,8 +23,12 @@
         default: true,
       },
       data: {
-        type: Object,
-        default: [],
+        type: Array,
+        default: () => [],
+      },
+      listenScroll: {
+        type: Boolean,
+        default: false,
       }
     },
     methods: {
@@ -39,11 +43,16 @@
         })
         if (this.probeType === 3) {
           this.scroll.on('scroll', (pos) => {
-           // console.log(pos.x + ' ' + pos.y);
+            // console.log(pos.x + ' ' + pos.y);
             this.$emit('changeLocation', pos);
           })
-         
-        } 
+        }
+         if (this.listenScroll) {
+            console.log("listenscroll");
+            this.scroll.on('scroll', (pos) => {
+              this.$emit('scroll', pos);
+            })
+          }
         /*this.scroll.on('scrollStart',()=>{
             this.$emit('isAllowSwiper',false);
         });
@@ -63,6 +72,12 @@
       onScroll(x, y) {
 
         // this.$emit
+      },
+      scrollTo() {
+        this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments);
+      },
+      scrollToElement() {
+        this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments);
       }
     },
     watch: {

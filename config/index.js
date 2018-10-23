@@ -16,9 +16,22 @@ module.exports = {
         bypass: function (req, res, proxyOptions) {
           req.headers.referer = 'https://c.y.qq.com';
           req.headers.host = 'c.y.qq.com';
+          
         },
         pathRewrite: {
           '^/api/getDiscList': ''
+        }
+      },
+      '/api/getSinger':{
+        target: 'https://c.y.qq.com/v8/fcg-bin/v8.fcg',
+        changeOrigin: true,
+        secure: false,
+        /*bypass: function (req, res, proxyOptions) {
+          req.headers.referer = 'https://c.y.qq.com';
+          req.headers.host = 'c.y.qq.com';
+        },*/
+        pathRewrite: {
+          '^/api/getSinger': ''
         }
       }
     },

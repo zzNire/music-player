@@ -8,10 +8,13 @@ import 'babel-polyfill'
 import fastclick from 'fastclick'
 import Swiper from 'swiper'
 import './commom/stylus/variable.styl';
+import lazyLoad from 'vue-lazyload';
 
 fastclick.attach(document.body);
 Vue.config.productionTip = false
-
+Vue.use(lazyLoad,{
+  loading :require('./commom/image/default.png')
+});
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

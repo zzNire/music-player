@@ -1,8 +1,9 @@
 <template>
   <div class="recommend-content">
-    <scroll class='recommend-scroll' :data="recommends" :probe-type="3"
+    <scroll class='recommend-scroll' :data="recommends.songList" :probe-type="3"
     @changeLocation='changeXY'
-    @isAllowSwipe="isAllowSwiper">
+    @isAllowSwipe="isAllowSwiper"
+    ref="scroll">
       <div class = "scroll-content">
         
         <div class="recommend">
@@ -11,7 +12,7 @@
             <slider class="slider" ref="slider" >
               <div class="slider-div" v-for="recommend in recommends.slider">
                 <a class="slider-a" :href="recommend.linkUrl">
-                  <img class="slider-img" :src="recommend.picUrl">
+                  <img  @load="loadImage" class="slider-img" :src="recommend.picUrl">
                 </a>
               </div>
             </slider>
@@ -34,7 +35,7 @@
             <div class="recommend-item" v-for="item in recommends.songList">
               <a class="recommend-a">
                 <div class="img-div">
-                  <img class="icon" :src="item.picUrl">
+                  <img class="icon" v-lazy="item.picUrl" >
                 </div>
                 <p class="name" v-html="item.songListDesc">{{item.songListDesc}}</p>
 
@@ -44,6 +45,9 @@
           </div>
           
         </div>
+      </div>
+      <div class="loading-contain" v-show="!recommends.slider.length">
+        <my-loading class="loading"></my-loading>
       </div>
     </scroll>
   </div>
@@ -58,11 +62,13 @@
   } from '../../api/recommend.js'
   import Slider from '../../base/slider/slider.vue'
   import Scroll from '../../base/scroll/scroll.vue'
+  import myLoading from '../../base/loading/loading.vue'
 
   export default {
     components: {
       Slider,
       Scroll,
+      myLoading,
     },
     data() {
       return {
@@ -110,6 +116,14 @@
       },
       isAllowSwiper(isAllow){
         this.$emit('tabIsSwiper',isAllow);
+      },
+      loadImage(){
+        if(!this.checkLoaded)
+        {
+          this.$refs.scroll.refresh();
+          this.checkLoaded = true;
+        }
+        
       }
 
     },
@@ -264,5 +278,18 @@
     letter-spacing: 1px;
     text-shadow: 1px 0 0 rgba(0, 0, 0, .15);
   }
+
+.loading-contain{
+  width :100%;
+  height :100%;
+  background :rgba(0,0,0,0.5);
+  position :fixed;
+  top:0%;
+  
+  }
+  .loading{
+    position :relative;
+    top:50%;
+    }
 
 </style>
