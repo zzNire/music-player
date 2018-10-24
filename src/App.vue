@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <myheader></myheader>
-    <tab></tab>
+    <myheader class="myheader"></myheader>
+    <tab class='tab'></tab>
   </div>
 </template>
 
@@ -19,9 +19,11 @@ export default {
 
 <style>
 #app {
+  position: relative;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
  
 }
+
 </style>

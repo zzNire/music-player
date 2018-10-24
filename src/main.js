@@ -9,6 +9,7 @@ import fastclick from 'fastclick'
 import Swiper from 'swiper'
 import './commom/stylus/variable.styl';
 import lazyLoad from 'vue-lazyload';
+import store from './store'
 
 fastclick.attach(document.body);
 Vue.config.productionTip = false
@@ -19,6 +20,7 @@ Vue.use(lazyLoad,{
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

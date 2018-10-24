@@ -1,6 +1,7 @@
 <template>
   <div class="tab">
     <div class="tab-tab">
+    
     <ul class="tab-ul">
       <li class="tab-item" :class="{'itemActive':nowIndex === index}" @click="changeTab(index)" v-for="(item,index) in list">
         {{item.name}}
@@ -11,7 +12,8 @@
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="(item, index) in componentList">
           <keep-alive>
-            <component :is="item.component" @tabIsSwiper='tabIsSwiper'></component>
+          
+          <component :is="item.component" @tabIsSwiper='tabIsSwiper'></component>
           </keep-alive>
         </div>
       </div>
@@ -67,16 +69,20 @@
     },
     mounted() {
       let i;
+      let path = this.$route.path.split('/');
+      path = '/'+path[1];
+      console.log("nowpath"+path);
+      this.$router.push(path);
       for (i = 0; i < this.componentList.length; i++) {
 
-        if (this.$route.path === this.componentList[i].path)
+        if (path === this.componentList[i].path)
           break;
       }
       this.nowIndex = i;
       if (!this.mySwiper) {
         this.mySwiper = new Swiper(".swiper-container", {
-          initialSlide: this.$route.path === '/recommend' ? 0 : this.$route.path === '/rank' ? 1 : this.$route.path ===
-            '/singer' ? 2 : this.$route.path === '/search' ? 3 : 0,
+          initialSlide: path === '/recommend' ? 0 : path === '/rank' ? 1 : path ===
+            '/singer' ? 2 : path === '/search' ? 3 : 0,
           scrollbar: {
             el: '.swiper-scrollbar',
             draggable: true,
@@ -104,6 +110,7 @@
         });
       }
       this.mySwiper.on('slideChange', () => {
+        
         let index = this.mySwiper.activeIndex;
         this.nowIndex = index;
         this.$router.push(this.componentList[index].path);
@@ -121,15 +128,23 @@
     },
     watch: {
       '$route'(to, from) {
-        //console.log(to.path + from.path);
+        console.log(to.path + ' '+from.path);
+        let indexTo = [];
+       let indexFrom = [];
+      indexTo = to.path.split('/');
+      indexFrom = from.path.split('/');
         //console.log(this.componentList[0].path);
         let i;
         for (i = 0; i < this.componentList.length; i++) {
 
-          if (to.path === this.componentList[i].path)
-            break;
+          if (indexTo[0] === this.componentList[i].path)
+          {
+            this.mySwiper.slideTo(i);
+            return;
+          }
+          
         }
-        this.mySwiper.slideTo(i);
+        
       }
     }
   }
@@ -145,7 +160,10 @@
     width: 100%;
     background: $color-sub-theme;
   }
-
+.tab-tab{
+  position :relative;
+  z-index :0;
+}
   .tab-item {
     padding-top: 10px;
     font-size: 14px;
@@ -169,6 +187,7 @@
     bottom :0px;
     width:100%;
     padding-top:13px;
+    z-index:10;
   }
 .swiper-wrapper{
   

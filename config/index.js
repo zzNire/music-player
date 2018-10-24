@@ -33,6 +33,14 @@ module.exports = {
         pathRewrite: {
           '^/api/getSinger': ''
         }
+      },
+      '/api/getSingerDetial':{
+        trager:'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg',
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: {
+          '^/api/getSingerDetial': ''
+        }
       }
     },
 
