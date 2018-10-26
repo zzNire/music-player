@@ -1,9 +1,9 @@
 <template>
   <div class="singer">
     <listview :data="map" @select="getSingerDetial"></listview>
-    <transition :name="showClass">
+   <!-- <transition :name="showClass">
       <singer-detial class="singer-content" v-if="isDetial"></singer-detial>
-    </transition>
+    </transition> -->
     
   </div>
 </template>
@@ -96,9 +96,11 @@ export default {
       console.log(this.map);
     },
     ...mapMutations({
-      setSinger:'SET_SINGER'
+      setSinger:'SET_SINGER',
+      showContent:'SHOW_CONTENT'
     }),
     getSingerDetial(singer) {
+      this.showContent('singer-detial');
       this.setSinger(singer);
       console.log("singer-detial");
       this.$router.push({

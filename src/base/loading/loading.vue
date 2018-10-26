@@ -24,12 +24,13 @@ export default {
 @import '../../commom/stylus/variable.styl';
 .loading{
     width: 100%;
+    height :100%;
     text-align: center;
 }
 .loading-text{
     font-size: 12px;
     line-height: 20px;
-    color: $color-text;
+    color: gray;
 
 }
 </style>

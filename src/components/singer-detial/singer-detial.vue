@@ -1,5 +1,5 @@
 <template>
-  <div class="singer-detial">
+  <div class="singer-detial" >
       <music-list :songs='songs'
       :bg-image="singer.avatar"
       :title="singer.name"></music-list>
@@ -19,6 +19,7 @@ import MusicList from '../music-list/music-list.vue'
     createSong
   } from '../../commom/js/song.js'
   export default {
+    name:'singer-detial',
     data() {
       return {
         singerDetial: [],
@@ -72,6 +73,8 @@ import MusicList from '../music-list/music-list.vue'
 
 
 <style lang="stylus" scoped>
-  .singer-detial {}
+  .singer-detial {
+    width :100%;
+    height :100%;}
 
 </style>
