@@ -184,7 +184,7 @@
   .swiper-container {
     position: fixed;
     top:70px;
-    bottom :0px;
+    bottom :45px;
     width:100%;
     padding-top:13px;
     z-index:10;

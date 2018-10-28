@@ -41,6 +41,14 @@ module.exports = {
         pathRewrite: {
           '^/api/getSingerDetial': ''
         }
+      },
+      'api/getVkey':{
+        trager:'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg',
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: {
+          '^/api/getVkey': ''
+        }
       }
     },
 

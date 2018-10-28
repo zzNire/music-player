@@ -1,24 +1,23 @@
 <template>
   <div class="music-list">
     <div class='back' @click="backToSinger">
-      <i class="icon-back"></i>
+      <i class="icon-prev"></i>
     </div>
-
-    <div class="singer-picture" ref="bgImage">
+    <div class="singer-picture" ref="bgImage" >
+      <div class='black' ref="black"></div>
       <img class="picture" :src="bgImage" ref="bgIcon" />
-
     </div>
     <div class="play-all-buttom" ref="playBtm">
       <i class='icon-play'></i><span class='play-btm-title'>播放全部<span class="songs-count">（共{{songs.length}}首）</span></span>
     </div>
     <div class="bg-layer" ref="bgLayer">
-
+     
     </div>
     <p class="title" ref="title">{{title}}</p>
     <scroll :data="songs" :probe-type="probeType" :click="click" :listen-scroll="listenScroll" @scroll='bglayerScroll'
       class="scroll-list" ref="list">
       <div class="songs-list">
-        <song-list :songs="songs"></song-list>
+        <song-list :songs="songs" @songSelect='songSelect'></song-list>
       </div>
       
     </scroll>
@@ -31,7 +30,7 @@
   import SongList from '../../base/song-list/song-list.vue'
   import Scroll from '../../base/scroll/scroll.vue'
   import Loading from '../../base/loading/loading.vue'
-  import {mapMutations} from 'vuex'
+  import {mapMutations,mapActions} from 'vuex'
   import {
     prefixStyle
   } from '../../commom/js/dom.js'
@@ -82,6 +81,7 @@
       this.minTransalteY = -this.imageHeight + MIN_HEIGHT; //向上滚动最大高度
       console.log('this.minTransalteY' + this.minTransalteY);
       this.$refs.title.style.top = this.imageHeight - MIN_HEIGHT  + 'px';
+      this.$refs.black.style.height = this.imageHeight+'px';
     },
     methods: {
       bglayerScroll(pos) {
@@ -94,7 +94,17 @@
       },
       ...mapMutations({
         showContent:'SHOW_CONTENT',
-      })
+        setFullScreen:'SET_FULL_SCREEN',
+      }),
+      ...mapActions([
+        'selectPlay',
+      ]),
+
+      songSelect(song,index){
+        this.selectPlay({
+          list:this.songs,
+          index:index});
+      }
     },
     watch: {
       ScrollY(newY) {
@@ -150,6 +160,7 @@
 
 <style lang="stylus" scoped>
   @import '../../commom/stylus/variable.styl';
+  @import '../../commom/stylus/style.css';
 .music-list{
    width: 100%;
     height: 100%;
@@ -167,15 +178,15 @@
     padding: 10px;
   }
 
-  .icon-back {
+  .icon-prev {
 
     font-size: 18px;
     color: white;
   }
 
-  .icon-back:before {
-    content: "\e911"
-  }
+.icon-prev:before {
+  content: "\e909";
+}
 
   .play-all-buttom {
     position :absolute;
@@ -206,7 +217,7 @@
   .play-btm-title {
     flex:1;
     display :inline-block;
- 
+    
     font-size :16px;
     line-height :38px;
     vertical-align :top;
@@ -230,6 +241,14 @@
 
   }
 
+  .black{
+    position :absolute;
+    top:0px;
+    width :100%;
+    background-color :rgba(0,0,0,0.4);
+    z-index:15;
+  }
+
   .singer-picture {
     position: relative;
     width: 100%;
@@ -238,7 +257,7 @@
     overflow: hidden;
     z-index: 10;
     transform-origin: top;
-   
+  
 
   }
 

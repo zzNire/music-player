@@ -8,7 +8,7 @@
       <component :is="contentName" class="singer-content"></component>
 
     </transition>
-
+    <player class="player"></player>
 
   </div>
 </template>
@@ -17,6 +17,7 @@
   import myheader from './components/header.vue'
   import tab from './components/tab/tab.vue'
   import singerDetial from './components/singer-detial/singer-detial.vue'
+  import Player from './components/player/player.vue'
   import {
     mapGetters
   } from 'vuex'
@@ -26,7 +27,8 @@
     components: {
       myheader,
       tab,
-      singerDetial
+      singerDetial,
+      Player,
     },
     data() {
       return {
@@ -48,9 +50,7 @@
 <style>
   #app {
 
-    position: fixed;
-    top: 0;
-    bottom: 0;
+    
     width: 100%;
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -59,15 +59,19 @@
   }
 
   .main {
-    position: relative;
+    width: 100%;
+    position: fixed;
+    top:0;
+    bottom: 45px;
     z-index: 0;
   }
 
   .singer-content {
-    position: absolute;
+    position: fixed;
     top:0px;
+    bottom: 45px;
     width: 100%;
-    height: 100%;
+   
     z-index: 10;
   }
 
@@ -84,4 +88,8 @@
     transition: all 0.5s;
   }
 
+.player{
+  position: relative;
+  z-index:20;
+}
 </style>

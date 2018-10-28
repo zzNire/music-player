@@ -13,11 +13,12 @@ import MusicList from '../music-list/music-list.vue'
     mapGetters
   } from 'vuex'
   import {
-    getSingerDetial
+    getSingerDetial,getVkey
   } from "../../api/singer.js";
   import {
     createSong
   } from '../../commom/js/song.js'
+
   export default {
     name:'singer-detial',
     data() {
@@ -53,17 +54,30 @@ import MusicList from '../music-list/music-list.vue'
             this.songs = this._normailizeSong();
             console.log('normarlized');
             console.log(this.songs);
+
+           
           }
         });
       },
       _normailizeSong() {
         let ret = [];
         this.singerDetial.forEach((item) => {
-            let musicData = item.musicData;
+          let vkey;
+          
+         // getVkey(item.musicData.songmid).then((res)=>{
+           // if (res.code === 0) {
+           // console.log(res.data.items[0].vkey);
+          // vkey =  res.data.items[0].vkey;
+          // console.log(item.musicData.songmid,vkey);
+           // }
+          let musicData = item.musicData;
           if (musicData.songid && musicData.albummid) {
-            ret.push(createSong(item.musicData));
+            ret.push(createSong(item.musicData,vkey));
+
           }
-        });
+          });
+            
+        //});
        return ret;
       }
     }
@@ -75,6 +89,6 @@ import MusicList from '../music-list/music-list.vue'
 <style lang="stylus" scoped>
   .singer-detial {
     width :100%;
-    height :100%;}
+    }
 
 </style>

@@ -1,7 +1,7 @@
 <template>
     <div class="song-list">
         <ul class="song-ul">
-            <li  class="song-li" v-for="(song,index) in songs">
+            <li  class="song-li" v-for="(song,index) in songs" @click="selectItem(song,index)">
                <div class="mun-left">
                    {{index+1}}
                 </div> 
@@ -21,6 +21,11 @@ export default {
         songs:{
             type:Array,
             default:'',
+        }
+    },
+    methods:{
+        selectItem(song,index){
+            this.$emit('songSelect',song,index);
         }
     }
 }
