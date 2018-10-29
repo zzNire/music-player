@@ -1,7 +1,7 @@
 <template>
   <div class="player">
     <transition name='maxplayer' @enter='enter' @after-enter='afterEnter' @leave='leave' @after-leave='afterLeave'>
-      <div class='max-player' v-if="fullScreen">
+      <div class='max-player' v-show="fullScreen" v-if="currentSong">
         <div class="bk-image" :style="{
           backgroundImage:`url(${currentSong.image})`,
           }">
@@ -14,8 +14,11 @@
           <p class="header-singer-name">{{currentSong.name}}</p>
         </div>
         <div class="content">
-          <div class="image-contain" ref="maxIcon">
+          <div v-show="!showLyric" class="image-contain" ref="maxIcon">
             <img class='header-album-icon' :src="currentSong.image" :class="playing?'icon-rotate' : 'icon-rotate icon-rotate-pause'" />
+          </div>
+          <div class='lyric-component' v-show="showLyric" v-if="currentLyric" >
+            <lyric-component  :lyrics="currentLyric.lines" :current-lyric-line="currentLyricLineNum"></lyric-component>
           </div>
         </div>
         <div class="control">
@@ -39,8 +42,8 @@
             </div>
           </div>
           <div class="contral-btn">
-            <div class="btn-icon">
-              <i class='icon-loop'></i>
+            <div class="btn-icon" @click="changeMode">
+              <i :class='iconMode'></i>
             </div>
             <div class="btn-icon" @click="preSong" :class="disableClass">
               <i class='icon-FORWARD-2 icon-pre'></i>
@@ -72,23 +75,33 @@
           <p class="singer-name">{{currentSong.name}}</p>
         </div>
         <div class='player-contral'>
-          <i :class="playing ? 'icon-pause':'icon-play'" @click.stop="musicPlaying"></i>
-          <i class='icon-list'></i>
+          <progress-circle class='progress-circle' :radius="30" :color="'#D44439'" :process="currentTime/songLength">
+           <i :class= "{'icon-play':!playing,'icon-pause':playing,'has-song':currentSong }" @click.stop="musicPlaying"></i>
+          </progress-circle>
+          <div class='list-div'>
+          <i class='icon-list' :class="{'has-song':currentSong}"></i>
+          </div>
         </div>
       </div>
       <div class='default' v-else>
         <div class='default-item'>
           <p class='default-title'>让生活充满音乐</p>
         </div>
-        <div class='player-contral'>
-          <i class="icon-play"></i>
+         <div class='player-contral' >
+          <div class='defult-progress-circle' style='position:relative'>
+            <i :class= "{'icon-play':!playing,'icon-pause':playing,'has-song':currentSong }" @click.stop="musicPlaying"></i>
+          </div>
+          <div class='list-div'>
           <i class='icon-list'></i>
+          </div>
         </div>
+        
       </div>
     </div>
     <audio ref="audio" v-if="currentSong" :src="currentSong.url" @canplay="ready" 
     @error="error" 
-    @timeupdate='setCurrentTIme'></audio>
+    @timeupdate='setCurrentTIme'
+    @ended='songEnded'></audio>
   </div>
 </template>
 
@@ -102,18 +115,32 @@
   import {
     prefixStyle
   } from '../../commom/js/dom.js'
+  import Lyric from 'lyric-parser'
+  import {playMode} from '../../commom/js/config.js'
+  import {shuffle} from '../../commom/js/utils.js'
   import ProgressBar from '../../base/progress-bar/progress-bar.vue'
+  import ProgressCircle from '../../base/progress-circle/progress-circle.vue'
+  import LyricComponent from '../../base/lyric/lyric.vue'
+  import {getLyric} from '../../api/song.js'
   const transform = prefixStyle('transform')
   export default {
     components:{
       ProgressBar,
+      ProgressCircle,
+      LyricComponent,
     },
     data() {
       return {
         songReady: false,
         currentTime: 0,
         songLength:0,
+        currentLyric:null,
+        showLyric:true,
+        currentLyricLineNum:0,
       }
+    },
+    created(){
+
     },
     computed: {
       ...mapGetters([
@@ -121,14 +148,21 @@
         'playList',
         'currentSong',
         'playing',
-        'currentIndex'
+        'currentIndex',
+        'mode',
+        'sequenceList'
       ]),
-      defaultCurrentSong() {
-
-      },
+     
       disableClass() {
         return this.songReady ? '' : 'disable'
+      },
+      iconMode(){
+        return this.mode === playMode.swquence?'icon-loop':
+        this.mode === playMode.random?'icon-random':'icon-refresh'
       }
+    },
+    created(){
+      
     },
     methods: {
       minimizePlayer() {
@@ -144,6 +178,8 @@
         setPlayer: 'SET_FULL_SCREEN',
         setPlaying: 'SET_PLAYING',
         setIndex: 'SET_CURRENT_INDEX',
+        setMode:'SET_MODE',
+        setPlayList:'SET_PLAY_LIST'
       }),
       enter(el, done) {
         const {
@@ -219,12 +255,13 @@
       preSong() {
         if (!this.songReady)
           return;
-        let index = this.currentIndex
+        let index = this.currentIndex;
         if (index === 0) {
           index = this.playList.length - 1;
-          return;
         }
-        index--;
+       
+        else index--;
+        
         this.setIndex(index);
         if (!this.playing) {
           this.musicPlaying();
@@ -237,9 +274,11 @@
         let index = this.currentIndex
         if (index === this.playList.length - 1) {
           index = 0;
-          return;
+         
+        }else{
+          index++;
         }
-        index++;
+        
         this.setIndex(index);
         if (!this.playing) {
           this.musicPlaying();
@@ -261,6 +300,55 @@
       changerSongProgress(rightProgress){
         this.currentTime = rightProgress * this.songLength;
         this.$refs.audio.currentTime = this.currentTime;
+      },
+       songEnded(){
+        //this.setPlaying(false);
+        if(this.mode === playMode.loop){
+          this.loop();
+        }else{
+          this.nextSong();
+        }
+      },
+      loop(){
+        this.$refs.audio.currentTime = 0;
+        this.$refs.audio.play();
+      },
+      changeMode(){
+        
+        let rightMode = (this.mode+1)%3;
+        console.log(rightMode);
+        this.setMode(rightMode);
+        let list = null;
+        //let randomList = JSON.parse(JSON.stringify(this.sequenceList)); 
+       
+        if(rightMode === playMode.random){
+          list = shuffle(this.sequenceList);
+         
+        }else{
+          list = this.sequenceList;
+        }
+        this.resetCunnrentIndex(list);
+        this.setPlayList(list);
+
+      },
+      resetCunnrentIndex(list){
+        let index = list.findIndex((item)=>{
+          return item.id === this.currentSong.id;
+        })
+        this.setIndex(index);
+      },
+      getLyric(){
+        this.currentSong.getLyric().then((res)=>{
+
+          this.currentLyric = new Lyric(res,this.handleLyric);
+          console.log(this.currentLyric);
+          if(this.playing){
+            this.currentLyric.play();
+          }
+        })
+      },
+      handleLyric({lineNum,txt}){
+        this.currentLyricLineNum = lineNum;
       }
       
     },
@@ -272,12 +360,19 @@
         minute = minute.length === 2 ? minute : '0' + minute;
         second = second.length === 2 ? second : "0" + second;
         return minute + ':'+ second;
-      }
+      },
+     
     },
     watch: {
-      currentSong() {
+      currentSong(newSong,oldSong) {
+        if(oldSong)
+        {
+           if(newSong.id === oldSong.id) return;
+        }
+       
         this.$nextTick(() => {
           this.$refs.audio.play();
+          this.getLyric();
         })
 
       },
@@ -292,7 +387,8 @@
           }
         })
 
-      }
+      },
+      
     }
   }
 
@@ -301,7 +397,7 @@
 
 <style lang="stylus" scoped>
   @import '../../commom/stylus/style.css';
-
+@import '../../commom/stylus/variable.styl';
   .player {
     width: 100%;
     height: 100%;
@@ -392,35 +488,67 @@
   }
 
   .player-contral {
-
     flex: 90px 0 0;
     text-align: right;
+    height:45px;
   }
+.defult-progress-circle{
 
-  .player-contral .icon-play {
-    display: inline-block;
-    padding: 7px 0;
+  padding:7px 0;
     padding-right: 7px;
+    height:30px;
+    display:inline-block;
+    width:30px;
+    margin-right :38px;
+  }
+.progress-circle{
+
+    padding:7px 0;
+    padding-right: 7px;
+    height:30px;
+    display:inline-block;
+    margin-right :38px;
+}
+  .player-contral .icon-play {
+    width:30px;
+    height:30px;
+    display: inline-block;
+   
     font-size: 30px;
     color: gray;
+    position: absolute;
+    top: 7px;
+    left: 0;
   }
 
   .player-contral .icon-pause {
+
+    width:30px;
+    height:30px;
     display: inline-block;
-    padding: 7px 0;
-    padding-right: 7px;
     font-size: 30px;
     color: gray;
+    position: absolute;
+    top: 7px;
+    left: 0;
   }
 
 
+.list-div{
+  position :absolute;
+  top:0;
+  right:0;
+    display:inline-block;
+   padding:7px 0;
+    padding-right: 7px;
+    height:30px;
+}
   .player-contral .icon-list {
     display: inline-block;
-    padding-right: 7px;
-    padding: 7px 0;
+   
     font-size: 30px;
     color: gray;
-    padding-right: 7px;
+    
   }
 
   .icon-list:before {
@@ -498,7 +626,18 @@
     bottom: 120px;
     top: 50px;
   }
-
+  .lyric-component{
+    height:100%;
+    width:100%;
+    text-align :center;
+    box-sizing :border-box;
+    padding:20px 20px;
+    font-size:14px;
+    line-height :30px;
+    font-weight:lighter;
+    color:rgba(200,200,200,0.7);
+    }
+   
   .image-contain {
     position: relative;
     width: 100%;
@@ -580,6 +719,24 @@
     color: rgba(221, 221, 221, 0.5);
   }
 
+.icon-random:before {
+  content: "\e90a";
+  width: 30px;
+    length: 30px;
+    padding: 10px 0;
+    display: inline-block;
+   
+    color: rgba(221, 221, 221, 0.5);
+}
+.icon-refresh:before {
+  content: "\e90b";
+  width: 30px;
+    length: 30px;
+    padding: 10px 0;
+    display: inline-block;
+    color: rgba(221, 221, 221, 0.5);
+}
+
 .icon-center{
   flex:1.4;
 }
@@ -630,8 +787,12 @@
   .disableClass {
     color: gray;
   }
+    .player-contral .has-song{
+  color:$color-sub-theme;
+}
 
   .btn-icon .icon-playlist {}
+
 
   @keyframes rotate {
     0% {

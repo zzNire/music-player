@@ -100,6 +100,8 @@
 
 
 <style lang="scss" scoped>
-  .wrapper {}
+  .wrapper {
+    height: 100%;
+  }
 
 </style>

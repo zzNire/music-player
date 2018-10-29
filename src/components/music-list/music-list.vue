@@ -7,7 +7,7 @@
       <div class='black' ref="black"></div>
       <img class="picture" :src="bgImage" ref="bgIcon" />
     </div>
-    <div class="play-all-buttom" ref="playBtm">
+    <div class="play-all-buttom" ref="playBtm" @click="playAll">
       <i class='icon-play'></i><span class='play-btm-title'>播放全部<span class="songs-count">（共{{songs.length}}首）</span></span>
     </div>
     <div class="bg-layer" ref="bgLayer">
@@ -101,9 +101,15 @@
       ]),
 
       songSelect(song,index){
+        console.log(song,index);
         this.selectPlay({
           list:this.songs,
           index:index});
+      },
+      playAll(){
+         this.selectPlay({
+          list:this.songs,
+          index:0});
       }
     },
     watch: {
@@ -206,12 +212,13 @@
   padding:11px 0;
   display :inline-block;
   vertical-align :middle;
-  font-size :16px;
+  font-size :25px;
   line-height :16px;
+  color:$color-sub-theme;
   
 }
   .icon-play:before {
-    content: "\e90c"
+    content: "\e908";
   }
 
   .play-btm-title {
@@ -276,6 +283,10 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 15;
+    white-space:nowrap;
+    overflow :hidden;
+    
+
   }
 
   .scroll-list {

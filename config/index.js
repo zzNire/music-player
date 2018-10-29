@@ -42,14 +42,25 @@ module.exports = {
           '^/api/getSingerDetial': ''
         }
       },
-      'api/getVkey':{
+      '/api/getVkey':{
         trager:'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg',
         changeOrigin: true,
         secure: false,
         pathRewrite: {
           '^/api/getVkey': ''
         }
-      }
+      },
+     /* '/api/lyric':{
+        trager:'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg',
+        bypass: function (req, res, proxyOptions) {
+          req.headers.referer = 'https://y.qq.com/portal/player.html',//'https://c.y.qq.com';
+          req.headers.host = 'c.y.qq.com';
+        },
+      
+        pathRewrite: {
+          '^/api/lyric': ''
+        }
+      }*/
     },
 
     // Various Dev Server settings

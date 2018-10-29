@@ -55,6 +55,7 @@
         let offsetWidth = Math.max(0, this.touch.btnX + deltaX)
         if (offsetWidth > this.barWidth) return;
         this.$refs.progressBar.style.width = offsetWidth + 'px';
+        
         //let rightProgress = offsetWidth /this.barWidth;
        // this.progress = offsetWidth /this.barWidth;
        
@@ -115,7 +116,7 @@
     border-radius: 50%;
     box-sizing: border-box;
     border: 5px solid rgba(221, 221, 221, 1);
-    background-color: rgba(165, 165, 165, 1);
+    background-color: rgba(100, 100, 100, 1);
   }
 
 </style>
