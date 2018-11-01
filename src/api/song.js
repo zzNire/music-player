@@ -24,6 +24,8 @@ export function getLyric(mid) {
     notice: 0,
     platform: 'yqq',
     needNewCode: 0,
+    categoryId: 10000000,
+  
   })
 
   return axios.get(url,{

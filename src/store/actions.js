@@ -16,7 +16,6 @@ export const selectPlay = function (context, {
   index
 }) {
   if (context.state.mode === playMode.random) {
-   // let copyList = JSON.parse(JSON.stringify(list)); 
     let randomList = shuffle(list);
     context.commit(types.SET_PLAY_LIST, randomList);
     let currentindex = findIndex(randomList,list[index]);

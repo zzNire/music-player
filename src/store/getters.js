@@ -17,3 +17,11 @@ export const currentIndex = state => state.currentIndex;
 export const currentSong = (state) => {
     return state.playList[state.currentIndex];
 }
+
+export const disc = state => state.disc;
+
+export const toplist = state => state.toplist;
+
+export const showSearch = state => state.showSearch;
+
+export const searchText = state => state.searchText;

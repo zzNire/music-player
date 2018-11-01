@@ -1,5 +1,6 @@
 <template>
   <div class="tab">
+    <div class='tab-content'> 
     <div class="tab-tab">
     
     <ul class="tab-ul">
@@ -8,6 +9,7 @@
       </li>
     </ul>
     </div>
+    
     <div class="swiper-container">
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="(item, index) in componentList">
@@ -19,6 +21,11 @@
       </div>
       <div class="swiper-scrollbar"></div>
     </div>
+    </div>
+    <transition name='searchbox'>
+      <search class='search-box' v-if='showSearch'></search>
+    </transition>
+    
   </div>
 </template>
 
@@ -30,7 +37,12 @@
   import singer from '../singer/singer.vue'
   import Swiper from 'swiper'
   import 'swiper/dist/css/swiper.css';
+  import {mapGetters} from 'vuex'
+
   export default {
+    components:{
+      search,
+    },
     data() {
       return {
         list: [{
@@ -42,9 +54,9 @@
           {
             name: '歌手',
           },
-          {
+        /*  {
             name: '搜索',
-          }
+          }*/
         ],
         componentList: [{
             path: '/recommend',
@@ -59,10 +71,10 @@
             path: '/singer',
             component: singer,
           },
-          {
+         /* {
             path: '/search',
             component: search,
-          }
+          }*/
         ],
         nowIndex: 0,
       }
@@ -116,6 +128,11 @@
         this.$router.push(this.componentList[index].path);
       });
     },
+    computed:{
+      ...mapGetters([
+        'showSearch'
+      ])
+    },
     methods: {
       changeTab(index) {
         console.log(index);
@@ -165,10 +182,10 @@
   z-index :0;
 }
   .tab-item {
-    padding-top: 10px;
+    padding-top: 5px;
     font-size: 14px;
     text-align: center;
-    width: 25%;
+    width: 33.3%;
     display: inline-block;
     color: $color-text-l;
   }
@@ -201,6 +218,19 @@
     top: 0px;
     left: 0px;
   }
+.search-box{
+  width:100%;
+  position :fixed;
+  top:51px;
+  bottom :45px;
+  z-index:20;
+  background-color :$color-background;
+  }
 
-
+.searchbox-enter,.searchbox-leave-to{
+  transform :translateY(100%);
+  }
+.searchbox-enter-active, .searchbox-leave-active{
+  transition :all 0.4s;
+  }
 </style>

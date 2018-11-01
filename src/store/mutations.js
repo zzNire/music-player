@@ -1,4 +1,5 @@
 import * as types from './mutation-types'
+import { type } from 'os';
 
 const mutations = {
     [types.SET_SINGER] (state,singer){
@@ -25,7 +26,18 @@ const mutations = {
     [types.SET_CURRENT_INDEX](state,flag){
         state.currentIndex = flag;
     },
-
+    [types.SET_DISC](state,flag){
+        state.disc = flag;
+    },
+    [types.SET_TOPLIST](state,flag){
+        state.toplist = flag;
+    },
+    [types.SET_SHOWSEARCH](state,flag){
+        state.showSearch = flag;
+    },
+    [types.SET_SEARCHTEXT](state,flag){
+        state.searchText = flag;
+    }
 
 }
 

@@ -13,12 +13,30 @@
           <p class='header-song-name'>{{currentSong.songname}}</p>
           <p class="header-singer-name">{{currentSong.name}}</p>
         </div>
-        <div class="content">
-          <div v-show="!showLyric" class="image-contain" ref="maxIcon">
+        <div class="content" 
+        @touchstart = 'contentTouchStart'
+        @touchmove = 'contentTouchMove'
+        @touchend = 'contentTouchEnd'>
+        <div class="album" ref="albumContain">
+          <div  class="image-contain" ref="maxIcon">
             <img class='header-album-icon' :src="currentSong.image" :class="playing?'icon-rotate' : 'icon-rotate icon-rotate-pause'" />
+            
           </div>
-          <div class='lyric-component' v-show="showLyric" v-if="currentLyric" >
-            <lyric-component  :lyrics="currentLyric.lines" :current-lyric-line="currentLyricLineNum"></lyric-component>
+          <div class='mini-lyric' >
+              <p class='mini-lyric-txt' v-html="defaultLyric" ></p>  
+            </div>
+        </div>
+          <div class='lyric-component'   ref="lyric" >
+            <lyric-component v-if="currentLyric" :lyrics="currentLyric.lines" 
+            :current-lyric-line="currentLyricLineNum" ref="lyricCom"
+            ></lyric-component>
+             <div v-else class='default-wrapper' >
+               <p class='default-lyrics'>歌词加载中...</p>
+            </div>
+          </div>
+          <div class='change-dot'>
+            <span class='album-dot' :class="{'current-dot': !showLyric }" ></span>
+            <span class='lyric-dot' :class="{'current-dot': showLyric }"></span>
           </div>
         </div>
         <div class="control">
@@ -122,7 +140,9 @@
   import ProgressCircle from '../../base/progress-circle/progress-circle.vue'
   import LyricComponent from '../../base/lyric/lyric.vue'
   import {getLyric} from '../../api/song.js'
+import { setTimeout, setInterval, clearInterval } from 'timers';
   const transform = prefixStyle('transform')
+  const transitionDuration = prefixStyle('transitionDuration')
   export default {
     components:{
       ProgressBar,
@@ -135,12 +155,13 @@
         currentTime: 0,
         songLength:0,
         currentLyric:null,
-        showLyric:true,
+        showLyric:false,
         currentLyricLineNum:0,
+        rightLyricTxt:'',
       }
     },
     created(){
-
+      this.touch = {};
     },
     computed: {
       ...mapGetters([
@@ -152,7 +173,10 @@
         'mode',
         'sequenceList'
       ]),
-     
+     defaultLyric(){
+       if(!this.rightLyricTxt) return '歌词加载中...';
+       else return this.rightLyricTxt;
+     },
       disableClass() {
         return this.songReady ? '' : 'disable'
       },
@@ -161,9 +185,7 @@
         this.mode === playMode.random?'icon-random':'icon-refresh'
       }
     },
-    created(){
-      
-    },
+
     methods: {
       minimizePlayer() {
         this.setPlayer(false);
@@ -188,7 +210,7 @@
           scale,
           startSize
         } = this._getLocationandScale();
-        console.log(x, y, scale);
+        //console.log(x, y, scale);
         let animation = {
           0: {
             transform: `translate3D(${-x}px,${y}px,0) scale(${1/scale})`
@@ -240,7 +262,7 @@
         const startTop = (window.innerHeight - 120 - 50) * 0.5;
         const startSize = window.innerWidth * 0.7;
         const x = window.innerWidth * 0.5 - (targetLeft + targetSize / 2);
-        const y = startTop + 120 - (targetBottom + targetSize / 2);
+        const y = startTop  + 120 - (targetBottom + targetSize / 2);
         const scale = startSize / targetSize;
         return {
           x,
@@ -251,8 +273,16 @@
       },
       musicPlaying() {
         this.setPlaying(!this.playing);
+        if(this.currentLyric)
+        {
+          this.currentLyric.togglePlay();
+        }
       },
       preSong() {
+         if(this.playing.length === 1){
+          this.loop();
+          return;
+        }
         if (!this.songReady)
           return;
         let index = this.currentIndex;
@@ -269,6 +299,11 @@
         this.songReady = false;
       },
       nextSong() {
+        if(this.playing.length === 1){
+          this.loop();
+          return;
+        }
+        
         if (!this.songReady)
           return;
         let index = this.currentIndex
@@ -300,6 +335,14 @@
       changerSongProgress(rightProgress){
         this.currentTime = rightProgress * this.songLength;
         this.$refs.audio.currentTime = this.currentTime;
+      //  this.playing = true;
+        this.setPlaying(true);
+       // this.$refs.audio.play();
+        if(this.currentLyric){
+          //this.currentLyric.togglePlay();
+          this.currentLyric.seek(this.currentTime*1000);
+          
+        }
       },
        songEnded(){
         //this.setPlaying(false);
@@ -312,6 +355,10 @@
       loop(){
         this.$refs.audio.currentTime = 0;
         this.$refs.audio.play();
+        if(this.currentLyric)
+        {
+         this.currentLyric.seek(0);
+        }
       },
       changeMode(){
         
@@ -319,8 +366,7 @@
         console.log(rightMode);
         this.setMode(rightMode);
         let list = null;
-        //let randomList = JSON.parse(JSON.stringify(this.sequenceList)); 
-       
+      
         if(rightMode === playMode.random){
           list = shuffle(this.sequenceList);
          
@@ -339,16 +385,95 @@
       },
       getLyric(){
         this.currentSong.getLyric().then((res)=>{
-
+          //console.log(res);
+          this.currentLyricLineNum = 0;
+          
           this.currentLyric = new Lyric(res,this.handleLyric);
-          console.log(this.currentLyric);
+          //console.log(this.currentLyric);
           if(this.playing){
             this.currentLyric.play();
           }
+        }).catch(()=>{
+          this.currentLyric = null;
+          this.rightLyricTxt = '';
+          this.currentLyricLineNum = 0;
         })
       },
       handleLyric({lineNum,txt}){
+        console.log(lineNum);
         this.currentLyricLineNum = lineNum;
+        this.rightLyricTxt = txt;
+      },
+      contentTouchStart(e){
+        //this.$refs.lyricComponent.lyricScroll.
+        this.touch.initialed = true;
+        let touch = e.touches[0];
+        this.touch.startX = touch.pageX;
+        this.touch.startY = touch.pageY;
+       // console.log(this.$refs.lyricCom);
+       
+        //this.touch.Xdirection = true; //true代表水平滑动
+        this.touch.Ydirection = false;
+        this.touch.count = 0;
+      },
+      contentTouchMove(e){
+       
+        if(!this.touch.initialed) return ;
+        let touch = e.touches[0];
+        let deltaX = touch.pageX - this.touch.startX;
+        let deltaY = touch.pageY - this.touch.startY;
+        if(Math.abs(deltaY) >Math.abs(deltaX)&&this.touch.count === 0){
+            //垂直滑动
+         this.touch.Ydirection = true;
+        }else{
+           this.$refs.lyricCom.disable();
+           this.Ydirection = false;
+        }
+
+        if(this.touch.Ydirection) return;
+        
+        const left = this.showLyric===false?0:-window.innerWidth;
+        const width =Math.min(0, Math.max(-window.innerWidth,left+deltaX));
+        //console.log( this.$refs.lyric);
+        this.touch.percent = Math.abs(width/window.innerWidth);
+        this.$refs.lyric.style[transform] = `translate3D(${width}px,0px,0)`;
+        this.$refs.lyric.style[transitionDuration] = '0s';
+        this.$refs.albumContain.style.opacity = 1-this.touch.percent;
+        this.$refs.albumContain.style[transitionDuration] = '0s';
+
+      },
+      contentTouchEnd(e){ 
+        this.touch.Ydirection = false;
+        this.$refs.lyricCom.enable();
+        //console.log('enable');
+        let width;
+        if(!this.touch.percent) return ;
+        if(this.showLyric === false){
+          if(this.touch.percent > 0.1){
+            width = -window.innerWidth;
+            this.showLyric = true;
+          }else{
+            width = 0;
+          }
+        }else{
+          if(this.touch.percent < 0.9){
+            width = 0;
+            this.showLyric = false;
+          }else{
+            width = -window.innerWidth;
+          }
+        }
+        if(width === 0) {
+           this.$refs.albumContain.style.opacity = 1;
+        }
+        else{
+           this.$refs.albumContain.style.opacity = 0;
+        }
+        this.$refs.lyric.style[transform] = `translate3D(${width}px,0px,0)`;
+        this.$refs.lyric.style[transitionDuration] = '0.3s';
+        this.$refs.albumContain.style[transitionDuration] = '0.3s';
+        this.touch.percent = null;
+       
       }
       
     },
@@ -369,21 +494,46 @@
         {
            if(newSong.id === oldSong.id) return;
         }
-       
-        this.$nextTick(() => {
+       if(this.currentLyric) {
+            this.currentLyric.stop();
+            this.currentLyric = null;
+        }
+        setTimeout(() => {
           this.$refs.audio.play();
           this.getLyric();
-        })
+        
+        },1000);
 
       },
       playing(newplaying) {
         this.$nextTick(() => {
           const audio = this.$refs.audio;
 
-          if (newplaying) {
+          if (newplaying) { 
             audio.play();
+            let v = 0;
+            var t = setInterval(()=>{
+              v+=0.1;
+              if(v<=1) audio.volume = v;
+              else{
+                clearInterval(t);
+              }
+            },100)
+            
           } else {
-            audio.pause();
+            
+            let v= audio.volume;
+            console.log('volume'+v);
+            let t = setInterval(()=>{
+              v-=0.1;
+              if(v>=0){
+                audio.volume = v;
+              }else{
+                audio.pause();
+                clearInterval(t);
+              }
+            },100)
+            
           }
         })
 
@@ -625,6 +775,17 @@
     width: 100%;
     bottom: 120px;
     top: 50px;
+    white-space :nowrap;
+    
+  }
+
+  .album{
+    width:100%;
+    height:100%;
+    display :inline-block;
+    vertical-align :top;
+    position :relative;
+   
   }
   .lyric-component{
     height:100%;
@@ -636,12 +797,41 @@
     line-height :30px;
     font-weight:lighter;
     color:rgba(200,200,200,0.7);
-    }
+    display :inline-block;
    
+    }
+   .change-dot{
+     width:100%;
+     text-align:center;
+     position:absolute;
+     bottom:0px;
+
+   }
+   .album-dot{
+     display:inline-block;
+     width:7px;
+     height:7px;
+     background-color :rgba(200,200,200,0.7);
+     border-radius :50%;
+     margin-right :5px;
+
+   }
+   .lyric-dot{
+     display:inline-block;
+     width:7px;
+     height:7px;
+     background-color :rgba(200,200,200,0.7);
+     border-radius :50%;
+   }
+   .current-dot{
+      background-color:white;
+   }
   .image-contain {
+   
     position: relative;
     width: 100%;
     height: 0;
+    vertical-align: top;
     padding-top: 70%;
     top: 50%;
     transform: translateY(-50%);
@@ -658,6 +848,30 @@
     box-sizing: border-box;
   }
 
+.default-wrapper{
+      position :relative;
+      top:50%;
+      transform :translateY(-50%);
+  }
+  .default-lyrics{
+      width:100%;
+      text-align :center;
+     
+  }
+.mini-lyric{
+  position :absolute;
+  width:100%;
+  bottom:5%;
+ 
+}
+  .mini-lyric-txt{
+  
+    margin:0 20px;
+    text-align :center;
+    font-size :15px;
+   overflow :hidden;
+   line-height :16px;
+  }
   .control {
     width: 100%;
     position: absolute;

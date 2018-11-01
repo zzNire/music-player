@@ -18,6 +18,8 @@
   import tab from './components/tab/tab.vue'
   import singerDetial from './components/singer-detial/singer-detial.vue'
   import Player from './components/player/player.vue'
+  import Disc from './components/disc/disc.vue'
+  import TopList from './components/toplist/toplist.vue'
   import {
     mapGetters
   } from 'vuex'
@@ -29,12 +31,22 @@
       tab,
       singerDetial,
       Player,
+      Disc,
+      TopList
     },
     data() {
       return {
         tabs: [{
           name: 'singer-detial',
           component: singerDetial,
+        },
+        {
+          name:'disc',
+          component: Disc,
+        },
+        {
+          name:'top-lisy',
+          component:TopList,
         }]
       }
     },

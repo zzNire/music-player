@@ -19,10 +19,10 @@
           </div>
           <div class="recommend-song">
             <p class="recommend-title">推荐歌单 ></p>
-            <div class="recommend-item" v-for="item in recommends.songList">
+            <div class="recommend-item" v-for="item in recommends.songList" @click="selectDisc(item)">
               <a class="recommend-a">
                 <div class="img-div">
-                  <img class="icon" :src="item.picUrl">
+                  <img class="icon" v-lazy="item.picUrl">
                 </div>
                 <p class="name" v-html="item.songListDesc">{{item.songListDesc}}</p>
 
@@ -32,7 +32,7 @@
           </div>
           <div class="recommend-song">
             <p class="recommend-title">最新音乐 ></p>
-            <div class="recommend-item" v-for="item in recommends.songList">
+            <div class="recommend-item" v-for="item in recommends.songList" @click="selectDisc(item)">
               <a class="recommend-a">
                 <div class="img-div">
                   <img class="icon" v-lazy="item.picUrl" >
@@ -50,6 +50,7 @@
         <my-loading class="loading"></my-loading>
       </div>
     </scroll>
+    
   </div>
 </template>
 
@@ -60,22 +61,27 @@
     getRecommend,
     getDiscList
   } from '../../api/recommend.js'
+  import {mapMutations} from 'vuex'
   import Slider from '../../base/slider/slider.vue'
   import Scroll from '../../base/scroll/scroll.vue'
   import myLoading from '../../base/loading/loading.vue'
+ 
 
   export default {
     components: {
       Slider,
       Scroll,
       myLoading,
+     
     },
     data() {
       return {
         recommends: {
           slider: [],
           allowSwiper:true,
+          
         },
+        showSonglist:false,
       }
     },
     created() {
@@ -87,12 +93,13 @@
       
     },
     methods: {
+      
       _getRecommend() {
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
             console.log(res.data);
             this.recommends = res.data;
-            //console.log(this.recommends.slider.length);
+            console.log(this.recommends);
           }
         });
       },
@@ -124,7 +131,17 @@
           this.checkLoaded = true;
         }
         
-      }
+      },
+      selectDisc(item){
+        this.setDisc(item);
+        this.setContentName('disc');
+        this.$router.push(`/recommend/${item.id}`);
+        this.showSonglist = true;
+      },
+      ...mapMutations({
+        setDisc:'SET_DISC',
+        setContentName:'SHOW_CONTENT',
+      }),
 
     },
     filters: {

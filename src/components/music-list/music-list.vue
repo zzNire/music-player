@@ -17,7 +17,7 @@
     <scroll :data="songs" :probe-type="probeType" :click="click" :listen-scroll="listenScroll" @scroll='bglayerScroll'
       class="scroll-list" ref="list">
       <div class="songs-list">
-        <song-list :songs="songs" @songSelect='songSelect'></song-list>
+        <song-list :songs="songs" @songSelect='songSelect' :rank="rank"></song-list>
       </div>
       
     </scroll>
@@ -34,12 +34,14 @@
   import {
     prefixStyle
   } from '../../commom/js/dom.js'
+  //import {playListMixin} from '../../commom/js/mixin.js'
   const filter = prefixStyle('filter')
   const transform = prefixStyle('transform')
   const MIN_HEIGHT = 48; //顶部高度
   const RESERVED_HEIGHT = 38; //播放全部的高度
   const UPPER = 10;
   export default {
+    mixins:[],
     props: {
       bgImage: {
         type: String,
@@ -53,6 +55,10 @@
         type: String,
         default: '',
       },
+      rank:{
+        type:Boolean,
+        default:false,
+      }
 
     },
     components: {
@@ -75,7 +81,7 @@
       //this.listTop = -this.imageHeight + RESERVED_HEIGHT;//
       console.log('this.minTransalteY' + this.minTransalteY);
       this.$refs.list.$el.style.top = `${this.imageHeight+RESERVED_HEIGHT-UPPER}px`;
-       this.$refs.list.$el.style.bottom = 0;
+       this.$refs.list.$el.style.bottom = 0+'px';
       console.log(this.$refs.list.$el);
       console.log('this.$refs.list.$el.style.top', this.imageHeight + RESERVED_HEIGHT);
       this.minTransalteY = -this.imageHeight + MIN_HEIGHT; //向上滚动最大高度
@@ -290,11 +296,9 @@
   }
 
   .scroll-list {
-
     position: absolute;
     z-index: 5;
     
-    bottom: 0px;
     background :$color-background;
   }
 

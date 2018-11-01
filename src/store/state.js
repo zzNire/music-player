@@ -12,7 +12,10 @@ const state = {
     mode:playMode.swquence,
     currentIndex:-1,
     mode:playMode.swquence,
-    
+    disc:{},
+    toplist:{},
+    showSearch:false,
+    searchText:'',
 }
 
 export default state;

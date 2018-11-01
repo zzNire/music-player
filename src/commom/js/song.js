@@ -18,7 +18,8 @@ export default class Song {
     album,
     duration,
     image,
-    url
+    url,
+    inCount,
   }) {
     this.id = id;
     this.mid = mid;
@@ -29,6 +30,7 @@ export default class Song {
     this.image = image;
     this.url = url;
     this.songname = songname;
+    this.inCount = inCount
   }
   getLyric() {
     if (this.lyric) return Promise.resolve(this.lyric);
@@ -49,7 +51,7 @@ export default class Song {
   }
 }
 
-export function createSong(musicData, vkey) {
+export function createSong(musicData, in_count) {
   return new Song({
     id: musicData.songid,
     mid: musicData.songmid,
@@ -62,11 +64,16 @@ export function createSong(musicData, vkey) {
     url: `http://ws.stream.qqmusic.qq.com/C100${musicData.songmid}.m4a?fromtag=0&guid=126548448`,
     //url:`http://isure.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?guid=6780662315&vkey=${vkey}&uin=0&fromtag=66`
     // 'http://isure.stream.qqmusic.qq.com/C400001Qu4I30eVFYb.m4a?guid=6780662315&vkey=B3C5B9D48E1179611FE99F3D01DA0C794649131083DD331C69475798919CB4E7DD311097732656FBE6E94DE9331D6B644B6B5FDC0CB3969F&uin=0&fromtag=66'
-
+    inCount:countFilter(in_count),
   })
 
 }
-
+function countFilter(count){
+           
+  let num = (count*100+'').split('.');
+  //console.log(num);
+  return num[0].substr(0,3)+'%';
+}
 //http://isure.stream.qqmusic.qq.com/C400001Qu4I30eVFYb.m4a?guid=6780662315&vkey=B3C5B9D48E1179611FE99F3D01DA0C794649131083DD331C69475798919CB4E7DD311097732656FBE6E94DE9331D6B644B6B5FDC0CB3969F&uin=0&fromtag=66
 //http://isure.stream.qqmusic.qq.com/C400001Qu4I30eVFYb.m4a?guid=6780662315&vkey=ED1C712288D8DEFB038D209669FD281691268CB83336A82FED00C978449AD427FF505019EB51380BD92732EFF50F40D5C6A21136796FA59F&uin=0&fromtag=66"
 function filterSinger(singer) {
