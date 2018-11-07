@@ -8,7 +8,7 @@
       </transition>
       <div class='middle' @click="maxSearchBox" ref="middle">
         <p class="player-name" v-if="!search">NIREANMUSIC</p>
-        <search-box class='search-box' v-else ref="searchBox"></search-box>
+        <search-box class='search-box' :color="'white'" v-else ref="searchBox" @searchText='searchTextChange'></search-box>
       </div>
       <div class="icon" ref="right">
         <transition name='cancle' mode="out-in">
@@ -23,35 +23,52 @@
 
 <script>
   import SearchBox from '../base/search-box/search-box.vue'
+  import {search} from '../api/search.js'
+  import Singer from '../commom/js/singer.js'
+  import {createSong} from '../commom/js/song.js'
   import {
     prefixStyle
   } from '../commom/js/dom.js'
   import {
-    mapMutations,mapGetters
+    mapMutations,mapGetters,mapActions
   } from 'vuex'
+
+  import Bus from '../commom/js/bus.js'
+  
   const transition = prefixStyle('transition')
   export default {
     components: {
       SearchBox,
+    
     },
     props: {
-      search: {
-        type: Boolean,
-        default: true,
-      },
+      
     },
     data() {
       return {
         ismaxSearchBox: false,
+        showSinger:true,
+        perpage:20,
+        hasMore:true,
       }
+    },
+    created(){
+      Bus.$on('unfocus',()=>{
+        if(this.$refs.searchBox)
+        this.$refs.searchBox.unfocus();
+      })
     },
     mounted() {
       this.width = window.innerWidth - 46 * 2;
       this.$refs.middle.style.width = this.width + 'px';
     },
+   
     computed:{
         ...mapGetters([
-            'searchText'
+            'searchText',
+            'searchP',
+            'listScroll',
+           
         ])
     },
     methods: {
@@ -75,17 +92,94 @@
         this.$refs.middle.style.width = this.width + 'px';
         this.ismaxSearchBox = false;
         this.showSearch(false);
+        this.$refs.searchBox.clearText();
+       
         //  this.$refs.left.style.left='-46px';
         // this.$refs.left.style.transition = 'all 5s';
       },
       ...mapMutations({
           showSearch:'SET_SHOWSEARCH',
-      })
+          setSearchText:'SET_SEARCHTEXT',
+          setSearchResult:'SET_SEARCHRESULT',
+          setPerpage:'SET_PERPAGE',
+          setP:'SET_P',
+          setHasMore:'SET_HASMORE',
+          setListScroll:'SET_LISTSCROLL',
+      }),
+      ...mapActions([
+          'saveSearchHistory'
+      ]),
+      searchTextChange(text){
+        if(text === this.searchText) return;
+        console.log('change');
+        this.setSearchText(text);
+        
+      },
+      search(){
+        this.setPerpage(this.perpage);
+        search(this.searchText,this.searchP,this.showSinger,this.perpage).then((res)=>{
+                console.log(res);
+               if(res.code === 0){ 
+                  this.hasMore = true;
+                  this.checkMore(res.data.song);
+                  this.setHasMore(this.hasMore);
+                   this.searchResult = this.resultFilter(res.data)
+                   console.log(this.searchResult);
+                  this.setSearchResult(this.searchResult);
+               }
+           });
+       },
+       resultFilter(data){
+           let result = [];
+           if(data.zhida && data.zhida.singerid){
+              // let singer = data.zhida;
+              let rightSinger = new Singer(data.zhida.singermid,data.zhida.singername);
+              /* data.zhida.type = 'singer';
+               console.log(data.zhida.type);
+               
+               console.log(result[0].type);*/ 
+               rightSinger.type = 'singer';
+               rightSinger.songnum = data.zhida.songnum;
+               rightSinger.albumnum = data.zhida.albumnum;
+               result.push(rightSinger);
+           }
+           if(data.song){
+             data.song.list.forEach(element => {
+               let song = createSong(element);
+               result.push(song);
+             });
+            // result = result.concat(data.song.list);
+           }
+           //console.log(result);
+           return result;
+       },
+       checkMore(data){  //下拉是否可以再请求数据
+           if(data.list.length === 0||( data.curpage * this.perpage) > data.totalnum ||data.totalnum < this.perpage){
+               this.hasMore = false;
+           }
+       },
+       saveSearch(text){//保存搜索历史
+          this.saveSearchHistory(text);
+       }
+       
     },
     watch:{
         searchText(text){
-            this.$refs.searchBox.setSearchText(text);
-        }
+          if(text) { 
+            this.search();
+            this.setP(1); //初始化当前页
+            this.saveSearch(text);
+
+          }
+          if(!text)  this.setSearchResult([]);
+          
+          this.$refs.searchBox.setSearchText(text);
+        },
+        searchP(newP,oldP){
+          if(newP === 1 ) return ;
+          this.search();
+        },
+        
     }
   }
 

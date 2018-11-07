@@ -9,7 +9,14 @@
 
     </transition>
     <player class="player"></player>
-
+    <transition name='confirm'>
+    <confirm  class='confirm-component' v-if='showConfirm'
+    :title='showParam.title'
+    :positive='showParam.positive'
+    :negative='showParam.negative'
+    @positiveSelect='selectPosotive'
+    @negativeSelect='selectNegative'></confirm>
+    </transition>
   </div>
 </template>
 
@@ -20,6 +27,9 @@
   import Player from './components/player/player.vue'
   import Disc from './components/disc/disc.vue'
   import TopList from './components/toplist/toplist.vue'
+  import Confirm from './base/confirm/confirm.vue'
+  import Vue from 'vue'
+  import Bus from './commom/js/bus.js'
   import {
     mapGetters
   } from 'vuex'
@@ -32,7 +42,8 @@
       singerDetial,
       Player,
       Disc,
-      TopList
+      TopList,
+      Confirm,
     },
     data() {
       return {
@@ -47,13 +58,26 @@
         {
           name:'top-lisy',
           component:TopList,
-        }]
+        }],
+       
       }
     },
     computed: {
       ...mapGetters([
-        'contentName'
+        'contentName',
+        'showConfirm',
+        'showParam',
       ])
+    },
+    methods:{
+      selectPosotive(){
+        console.log(this.showConfirm.componentName);
+         Bus.$emit('ConfirmPositive',this.showParam.componentName);
+      },
+      selectNegative(){
+        console.log(this.showConfirm.componentName);
+          Bus.$emit('ConfirmNegative',this.showParam.componentName);
+      }
     }
   }
 
@@ -92,16 +116,44 @@
     transform: translate3d(100%, 0, 0);
   }
 
-  .slideTo-enter-to,
-  .slideTo-leave {}
-
   .slideTo-enter-active,
   .slideTo-leave-active {
     transition: all 0.5s;
+  }
+
+  .confirm-enter
+  {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+
+.confirm-leave-to{
+   opacity: 0;
+}
+  .confirm-enter-active,
+  .confirm-leave-active {
+    transition: all 0.2s;
   }
 
 .player{
   position: relative;
   z-index:20;
 }
+
+.confirm-component{
+  z-index:25;
+}
+
+@keyframes rotate{
+  0%{
+    transform: scale()
+  }
+  60%{
+
+  }
+  100%{
+
+  }
+}
+
 </style>

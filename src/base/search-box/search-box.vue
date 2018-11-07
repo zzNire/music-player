@@ -1,6 +1,7 @@
 <template>
   <div class='search-box'>
-    <input class='box' :placeholder="placeholder" v-model="searchText" ref="input">
+    <input class='box' :placeholder="placeholder" v-model="searchText" ref="input"
+    :style="{color:color,fontSize:fontSize}">
     <i class='icon-search'></i>
     <i class='icon-dismiss' v-if="searchText" @click="clearText"></i>
     </input>
@@ -10,13 +11,22 @@
 
 
 <script>
+import {mapMutations} from 'vuex'
+import {debounce} from '../../commom/js/utils.js'
   export default {
     props: {
       placeholder: {
         type: String,
         default: '搜索歌曲、歌手',
+      },
+      color:{
+        type:String,
+        default:'black',
+      },
+      fontSize:{
+         type:String,
+        default:'13px',
       }
-
     },
     data(){
         return{
@@ -24,9 +34,12 @@
         }
     },
     created(){
-        this.$watch('searchText',(newText)=>{
+        this.$watch('searchText',debounce((newText)=>{
+          
             this.$emit('searchText',newText);
-        })
+           // if(newText === this.searchText) return ;
+           // this.setSearchText(newText);
+        },200));
     },
     methods:{
         clearText(){
@@ -37,7 +50,11 @@
         },
         setSearchText(text){
             this.searchText = text;
+        },
+        unfocus(){
+          this.$refs.input.blur();
         }
+       
     }
   }
 
@@ -48,7 +65,7 @@
   .search-box {
     position: relative;
     box-sizing: border-box;
-    height: 26px;
+    
     border-radius: 13px;
     padding: 0 25px;
     background: rgba(255, 255, 255, 0.3);
@@ -57,10 +74,8 @@
 
   .box {
     background: rgba(255, 255, 255, 0);
-    height: 26px;
+    padding:5px 0;
     width: 100%;
-    color: white;
-    font-size: 13px;
     vertical-align: middle;
     outline: none;
     text-align: left;
@@ -68,9 +83,9 @@
 
   ::-webkit-input-placeholder {
     /* WebKit browsers */
-    color: rgba(255, 255, 255, 0.7);
-    line-height: 13px;
-    font-size: 13px;
+    color :inherit;
+    opacity :0.8
+ 
   }
 
   :-moz-placeholder {

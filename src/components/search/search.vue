@@ -1,83 +1,213 @@
 <template>
-    <div class='search'>
+  <div class='search'>
+    <scroll class='search-scroll' :data="searchData" v-if="!searchText">
+      <div class='default'>
         <div class='hotkey-list'>
-            <p class="hotkey-title"> 热门搜索</p>
-            <ul class="hotkey-ul">
-                <li class='hotkey-li' v-for="key in hotKey" @click="selectKey(key.k)">
-                    {{key.k}}
-                </li>
-            </ul>
+          <p class="hotkey-title"> 热门搜索</p>
+          <ul class="hotkey-ul">
+            <li class='hotkey-li' v-for="key in hotKey" @click="selectKey(key.k)">
+              {{key.k}}
+            </li>
+          </ul>
         </div>
-        <div class='history-list'>
-            <p class="hotkey-title">搜索历史</p>
-            <ul class="hotkey-ul">
-                <li class='hotkey-li' v-for="key in hotKey">
-                    {{key.k}}
-                </li>
-            </ul>
-        </div>
+        <search-list class="search-list"
+        @clearAllSearchHisory='clearAll' @clearItemSearchHisory='deleteItem' @selectItem="selectItem"
+          :search-history="searchHistory"></search-list>
+      </div>
+    </scroll>
+    <div class='search-result' v-else>
+      <suggest :search-result="result" ref="suggest"></suggest>
     </div>
+
+  </div>
 </template>
 
 
 <script>
-import {getHotkey} from '../../api/search.js'
-import {mapMutations} from 'vuex'
-export default {
-    data(){
-        return {
-            hotKey:[],
-        }
+  import {
+    getHotkey
+  } from '../../api/search.js'
+  import {
+    mapMutations,
+    mapGetters,
+    mapActions,
+  } from 'vuex'
+  import Suggest from '../../base/suggest/suggest.vue'
+  import SearchList from '../../base/search-list/search-list.vue'
+  import Confirm from '../../base/confirm/confirm.vue'
+  import Bus from '../../commom/js/bus.js'
+  import Scroll from '../../base/scroll/scroll.vue'
+
+
+  export default {
+  
+    components: {
+      Suggest,
+      SearchList,
+      Confirm,
+      Scroll,
     },
-    created(){
-        this._getHotkey();
+    data() {
+      return {
+        hotKey: [],
+        result: [],
+        showConfirm: false,
+        name: 'Search',
+      }
     },
-    methods:{
-        _getHotkey(){
-            getHotkey().then((res)=>{
-                if(res.code === 0){
-                    this.hotKey = res.data.hotkey.slice(0,10);
-                    console.log(this.hotKey);
-                }
-            })
-        },
-        selectKey(key){
-            this.setSearchText(key);
-        },
-        ...mapMutations({
-            setSearchText:'SET_SEARCHTEXT'
+    created() {
+      this._getHotkey();
+      Bus.$on('ConfirmPositive', (name) => {
+        console.log(name);
+        if(this.name !== name) return;
+        this.setShowConfirm(false);
+        this.deleteAllSearchHistory();
+
+      });
+      Bus.$on('ConfirmNegative', (name) => {
+         if(this.name !== name) return;
+        this.setShowConfirm(false);
+      })
+    },
+    computed: {
+      ...mapGetters([
+        'searchText',
+        'searchResult',
+        'searchP',
+        'searchHistory'
+      ]),
+      searchData() {
+        return this.hotKey.concat(this.searchHistory);
+      }
+    },
+    methods: {
+      _getHotkey() {
+        getHotkey().then((res) => {
+          if (res.code === 0) {
+            this.hotKey = res.data.hotkey.slice(0, 10);
+            console.log(this.hotKey);
+          }
         })
+      },
+      selectKey(key) {
+        this.setSearchText(key.substr(0, key.length - 1));
+      },
+      ...mapMutations({
+        setSearchText: 'SET_SEARCHTEXT',
+        setP: 'SET_P',
+        setShowConfirm: 'SET_SHOWCONFIRM',
+        setConfirmParam: 'SET_SHOWPARAM',
+      }),
+      ...mapActions([
+        'deleteAllSearchHistory',
+        'deleteItemSearchHistory',
+
+      ]),
+      filterSinger(list) {
+        console.log('singer icon');
+        list.forEach(element => {
+          if (element.type === 'singer') {
+
+            element.icon =
+              `http://y.gtimg.cn/music/photo_new/T001R300x300M000${element.singermid}.jpg?max_age=2592000`;
+          }
+        });
+      },
+      selectItem(index) {
+        this.setSearchText(this.searchHistory[index]);
+      },
+      clearAll() {
+        let confirmParam = {
+          title: '确认清空全部历史记录',
+          positive: '确认',
+          negative: '取消',
+          componentName: this.name,
+        };
+        this.setConfirmParam(confirmParam);
+        this.setShowConfirm(true);
+
+
+
+      },
+      deleteItem(index) {
+        this.deleteItemSearchHistory(this.searchHistory[index]);
+
+      },
+
+
+
+    },
+    watch: {
+      searchResult(list) {
+        if (list.length === 0) {
+          console.log('searchresult null');
+          this.result = [];
+          return;
+        }
+        if (this.searchP !== 1) {
+          console.log('concat');
+          this.result = this.result.concat(list);
+        } else {
+          this.result = list;
+          if (this.$refs.suggest) {
+            this.$refs.suggest.scrollToTop();
+          }
+        }
+
+        // console.log('watch result');
+        //console.log(this.result);
+
+        console.log(this.result);
+
+      }
     }
-}
+  }
+
 </script>
 
 
 <style lang="stylus" scoped>
-.search{
-    color:black;
-    padding:0 10px;
-    }
+  .search {
+    color: black;
+    box-sizing: border-box;
+    padding: 0 5px;
+    width: 100%;
 
-.hotkey-list{
-    margin :10px 0;
-    }
-.hotkey-title{
-    font-size :15px;
-    font-weight :bold;
-    margin :10px 0;
-    }
-.hotkey-li{
-    display:inline-block;
-    font-size :14px;
-    line-height :30px;
-    padding:0 10px;
-    height :30px;
-    border-radius :30px;
-    background-color :rgb(230,230,230);;
-    margin :5px;
-    }
+  }
 
-.history-list{
-    margin-top:30px;
-        }
+  .search-scroll {
+    height: 100%;
+    overflow :hidden;
+  }
+
+  .search-result {
+    width: 100%;
+    height: 100%;
+  }
+
+  .hotkey-list {
+    
+  }
+
+  .hotkey-title {
+    font-size: 15px;
+    font-weight: bold;
+    padding: 10px 5px;
+  }
+
+
+  .hotkey-li {
+    display: inline-block;
+    font-size: 14px;
+    line-height: 30px;
+    padding: 0 10px;
+    height: 30px;
+    border-radius: 30px;
+    background-color: rgb(230, 230, 230);
+    margin: 5px;
+  }
+
+.search-list{
+    margin-top:20px;
+}
 </style>

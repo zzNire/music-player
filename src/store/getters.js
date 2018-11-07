@@ -25,3 +25,19 @@ export const toplist = state => state.toplist;
 export const showSearch = state => state.showSearch;
 
 export const searchText = state => state.searchText;
+
+export const searchResult = state=> state.searchResult;
+
+export const searchPerpage = state => state.searchPerpage;
+
+export const searchP = state => state.searchP;
+
+export const hasMore = state =>state.hasMore;
+
+export const listScroll = state => state.listScroll;
+
+export const searchHistory = state => state.searchHistory;
+
+export const showConfirm = state => state.showConfirm;
+
+export const showParam = state => state.showParam;

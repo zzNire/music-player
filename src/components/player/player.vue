@@ -1,6 +1,8 @@
 <template>
   <div class="player">
+  
     <transition name='maxplayer' @enter='enter' @after-enter='afterEnter' @leave='leave' @after-leave='afterLeave'>
+    
       <div class='max-player' v-show="fullScreen" v-if="currentSong">
         <div class="bk-image" :style="{
           backgroundImage:`url(${currentSong.image})`,
@@ -11,7 +13,7 @@
 
           <i class="icon-down" @click="minimizePlayer"></i>
           <p class='header-song-name'>{{currentSong.songname}}</p>
-          <p class="header-singer-name">{{currentSong.name}}</p>
+          <p class="header-singer-name" v-html="currentSong.name"></p>
         </div>
         <div class="content" 
         @touchstart = 'contentTouchStart'
@@ -81,8 +83,11 @@
         </div>
 
       </div>
-    </transition>
-    <div class="mini-player">
+    
+    </transition> 
+    <div class='footer'>
+    <transition name="footer" mode="out-in">
+    <div class="mini-player" v-if="!ifShowPlayList" key='mini-player'>
       <div class='player' v-if='currentSong' @click="maxmizePlayer">
         <div class='song-icon'>
           <img class='icon' :class="playing?'icon-rotate' : 'icon-rotate icon-rotate-pause'" v-show="currentSong" :src="currentSong.image"
@@ -97,7 +102,8 @@
            <i :class= "{'icon-play':!playing,'icon-pause':playing,'has-song':currentSong }" @click.stop="musicPlaying"></i>
           </progress-circle>
           <div class='list-div'>
-          <i class='icon-list' :class="{'has-song':currentSong}"></i>
+          <i class='icon-list' :class="{'has-song':currentSong}"
+          @click.stop='showPlaylist'></i>
           </div>
         </div>
       </div>
@@ -107,15 +113,25 @@
         </div>
          <div class='player-contral' >
           <div class='defult-progress-circle' style='position:relative'>
-            <i :class= "{'icon-play':!playing,'icon-pause':playing,'has-song':currentSong }" @click.stop="musicPlaying"></i>
+            <i :class= "{'icon-play':!playing,'icon-pause':playing,'has-song':currentSong }"></i>
           </div>
           <div class='list-div'>
           <i class='icon-list'></i>
           </div>
         </div>
-        
       </div>
     </div>
+      <play-list class='playlist' v-else key='playlist'
+      :seq-list="sequenceList" :mode="mode" :right-index="rightIndex"
+      @changeMode = 'changeMode'
+    
+      @closePlayList='closePlaylist'></play-list>
+  </transition>
+  <transition name='background'>
+    <div class="playlist-back" v-show='ifShowBK' ref="playlistBack"
+    @click.stop='closePlaylist'></div>
+  </transition>
+   </div>
     <audio ref="audio" v-if="currentSong" :src="currentSong.url" @canplay="ready" 
     @error="error" 
     @timeupdate='setCurrentTIme'
@@ -139,6 +155,7 @@
   import ProgressBar from '../../base/progress-bar/progress-bar.vue'
   import ProgressCircle from '../../base/progress-circle/progress-circle.vue'
   import LyricComponent from '../../base/lyric/lyric.vue'
+  import PlayList from '../../base/play-list/play-list.vue'
   import {getLyric} from '../../api/song.js'
 import { setTimeout, setInterval, clearInterval } from 'timers';
   const transform = prefixStyle('transform')
@@ -148,6 +165,7 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
       ProgressBar,
       ProgressCircle,
       LyricComponent,
+      PlayList,
     },
     data() {
       return {
@@ -158,10 +176,18 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
         showLyric:false,
         currentLyricLineNum:0,
         rightLyricTxt:'',
+        ifShowPlayList:false,
+        ifShowBK:false,
       }
     },
     created(){
       this.touch = {};
+      
+    },
+    mounted(){
+      let height = window.innerHeight ;
+      console.log(this.$refs.playlistBack);
+      this.$refs.playlistBack.style.height = height + 'px';
     },
     computed: {
       ...mapGetters([
@@ -173,6 +199,11 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
         'mode',
         'sequenceList'
       ]),
+      rightIndex(){
+        return this.sequenceList.findIndex((song)=>{
+          return song.id === this.currentSong.id;
+        })
+      },
      defaultLyric(){
        if(!this.rightLyricTxt) return '歌词加载中...';
        else return this.rightLyricTxt;
@@ -299,7 +330,7 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
         this.songReady = false;
       },
       nextSong() {
-        if(this.playing.length === 1){
+        if(this.playList.length === 1){
           this.loop();
           return;
         }
@@ -361,7 +392,6 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
         }
       },
       changeMode(){
-        
         let rightMode = (this.mode+1)%3;
         console.log(rightMode);
         this.setMode(rightMode);
@@ -474,6 +504,16 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
         this.$refs.albumContain.style[transitionDuration] = '0.3s';
         this.touch.percent = null;
        
+      },
+      showPlaylist(){
+       this.ifShowPlayList = true;
+       setTimeout(()=>{
+         this.ifShowBK = true;
+       },300);
+      },
+      closePlaylist(){
+        this.ifShowPlayList = false;
+        this.ifShowBK = false;
       }
       
     },
@@ -490,9 +530,17 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
     },
     watch: {
       currentSong(newSong,oldSong) {
+        if(!newSong){
+          this.ifShowPlayList = false;
+          this.ifShowBK = false;
+          this.currentLyric.stop();
+          this.currentLyric = null;
+          return ;
+        }
         if(oldSong)
         {
-           if(newSong.id === oldSong.id) return;
+         
+          if(newSong.id === oldSong.id) return;
         }
        if(this.currentLyric) {
             this.currentLyric.stop();
@@ -508,7 +556,7 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
       playing(newplaying) {
         this.$nextTick(() => {
           const audio = this.$refs.audio;
-
+          if(!audio) return ;
           if (newplaying) { 
             audio.play();
             let v = 0;
@@ -586,6 +634,7 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
     background: white;
     color: black;
     z-index: 10;
+    
   }
 
   .player {
@@ -1005,9 +1054,42 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
   color:$color-sub-theme;
 }
 
-  .btn-icon .icon-playlist {}
+.playlist{
 
 
+}
+
+  .footer-enter,
+  .footer-leave-to {
+    transform: translateY(100%);
+  }
+
+  .footer-enter-active,
+  .footer-leave-active {
+    transition: all 0.3s;
+  }
+
+.footer{
+  height:100%;
+  width:100%
+  }
+
+.playlist-back{
+  width:100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+  .background-enter,
+  .background-leave-to {
+    
+    opacity:0;
+  }
+
+  .background-enter-active,
+  .background-leave-active {
+   
+  }
+  
   @keyframes rotate {
     0% {
       transform: rotate(0);

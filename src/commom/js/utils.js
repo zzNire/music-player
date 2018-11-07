@@ -12,3 +12,15 @@ export function shuffle(list){
     return arr;
 
 }
+
+export function debounce(func,delay){ //无操作 delay 秒 执行函数func
+    let timer;
+    return function(...args){
+        if(timer){
+            clearTimeout(timer)
+        }
+        timer = setTimeout(()=>{
+            func.apply(this,args)
+        },delay)
+    }
+}

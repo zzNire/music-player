@@ -37,7 +37,32 @@ const mutations = {
     },
     [types.SET_SEARCHTEXT](state,flag){
         state.searchText = flag;
+    },
+    [types.SET_SEARCHRESULT](state,flag){
+        state.searchResult = flag;
+    },
+    [types.SET_PERPAGE](state,flag){
+        state.searchPerpage = flag;
+    },
+    [types.SET_P](state,flag){
+        state.searchP = flag;
+    },
+    [types.SET_HASMORE](state,flag){
+        state.hasMore = flag;
+    },
+    [types.SET_LISTSCROLL](state,flag){
+        state.listScroll = flag;
+    },
+    [types.SET_SEARCHHISTORY](state,flag){
+        state.searchHistory = flag;
+    },
+    [types.SET_SHOWCONFIRM](state,flag){
+        state.showConfirm = flag;
+    },
+    [types.SET_SHOWPARAM](state,flag){
+        state.showParam = flag;
     }
+
 
 }
 

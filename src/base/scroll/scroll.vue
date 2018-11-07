@@ -29,8 +29,21 @@
       listenScroll: {
         type: Boolean,
         default: false,
+      },
+      pullup:{
+        type:Boolean,
+        default:false,
+      },
+      beforeScroll:{
+        type:Boolean,
+        default:false,
+      },
+      scrollToRightPosition:{
+        type:Boolean,
+        default:false,
       }
     },
+
     methods: {
       _initScroll() {
         if (!this.$refs.wrapper) {
@@ -53,12 +66,26 @@
               this.$emit('scroll', pos);
             })
           }
+          if(this.pullup){
+            this.scroll.on('scrollEnd',()=>{
+              if(this.scroll.y <= (this.scroll.maxScrollY + 50)){
+                this.$emit('scrollToEnd');
+              }
+            })
+          }
+          if(this.beforeScroll){
+            this.scroll.on('beforeScrollStart',()=>{
+              this.$emit('beforeScroll');
+            })
+          }
+          
         /*this.scroll.on('scrollStart',()=>{
             this.$emit('isAllowSwiper',false);
         });
         this.scroll.on('scrollEnd',()=>{
             this.$emit('isAllowSwiper',true);
         })*/
+
       },
       enable() {
        // console.log('sroll enable');
@@ -78,8 +105,10 @@
         this.scroll && this.scroll.scrollTo.apply(this.scroll, arguments);
       },
       scrollToElement() {
+        console.log('scrolltoelement');
         this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments);
-      }
+      },
+
     },
     watch: {
       data() {
@@ -92,7 +121,11 @@
     mounted() {
       setTimeout(() => {
         this._initScroll();
+        if(this.scrollToRightPosition){
+            this.$emit('scrollToRight');
+        }
       }, 20);
+      
 
     }
   }

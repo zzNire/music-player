@@ -1,5 +1,5 @@
 import {playMode} from '../commom/js/config.js'
-
+import {getSearch} from '../commom/js/catch.js'
 const state = {
     singer:{
 
@@ -15,7 +15,22 @@ const state = {
     disc:{},
     toplist:{},
     showSearch:false,
+    
     searchText:'',
+    searchResult:[],
+    searchPerpage:20,
+    searchP:1,
+    hasMore:true,
+
+    listScroll:null,
+    searchHistory:getSearch(),
+
+    showConfirm:false,
+    showParam:{
+        title:' ',
+        positive:' ',
+        negative:' ',
+    },
 }
 
 export default state;
