@@ -31,6 +31,9 @@ const state = {
         positive:' ',
         negative:' ',
     },
+
+    playHistory:[],
+    searchMode:false,
 }
 
 export default state;

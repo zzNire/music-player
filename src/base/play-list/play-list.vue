@@ -86,6 +86,8 @@
       return {
          name:'playList',
          ifShowAddSong:false,
+
+
       }
     },
     created(){
@@ -119,6 +121,7 @@
         setPlaying: 'SET_PLAYING',
         setShowConfirm: 'SET_SHOWCONFIRM',
         setConfirmParam: 'SET_SHOWPARAM',
+        setSearchMode :'SET_SEARCHMODE'
       }),
       ...mapActions([
         'deleteSong',
@@ -170,9 +173,11 @@
       },
       showAddSong(){
         this.ifShowAddSong = true;
+        this.setSearchMode(true);
       },
       closeAddSong(){
         this.ifShowAddSong = false;
+        this.setSearchMode(false);
       }
     },
     watch: {

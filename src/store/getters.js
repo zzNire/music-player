@@ -41,3 +41,7 @@ export const searchHistory = state => state.searchHistory;
 export const showConfirm = state => state.showConfirm;
 
 export const showParam = state => state.showParam;
+
+export const playHistory = state => state.playHistory;
+
+export const searchMode = state => state.searchMode;

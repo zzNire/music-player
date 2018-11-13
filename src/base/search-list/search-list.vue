@@ -1,13 +1,16 @@
 <template>
   <div class='history-list' v-if="searchHistory.length!==0" >
-    <p class="history-title">搜索历史</p>
-    <i class='icon-clear' @click.stop="clearAllSearchHisory"></i>
-    <ul class="history-ul">
-      <li class='history-li' v-for="(history,index) in searchHistory" @click="selectItem(index)">
+    <p class="history-title" v-if="showTitle">搜索历史</p>
+    <i class='icon-clear' @click.stop="clearAllSearchHisory" v-if="showTitle"></i>
+    <transition-group name="list" tag="ul"class="history-ul">
+    
+      <li class='history-li' v-for="(history,index) in searchHistory" :key="history"
+      @click="selectItem(index)">
         <p class="li-text"> {{history}}</p>
         <i class="icon-delete" @click.stop="clearItemSearchHisory(index)"> </i>
       </li>
-    </ul>
+    
+    </transition-group>
   </div>
 </template>
 
@@ -17,6 +20,10 @@
       searchHistory: {
         type: Array,
         default: [],
+      },
+      showTitle:{
+        type:Boolean,
+        default:true,
       }
     },
     methods:{
@@ -47,6 +54,8 @@
     font-size: 14px;
     line-height: 30px;
     align-items:center;
+    height :30px;
+    overflow :hidden;
   }
 
  .icon-delete {
@@ -85,4 +94,10 @@
     top: 0px;
   }
 
+.list-enter , .list-leave-to{
+  height :0;
+}
+.list-enter-active , .list-leave-active{
+  transition :all 0.1s;
+  }
 </style>

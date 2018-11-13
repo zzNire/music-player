@@ -2,7 +2,7 @@
     <div class="song-list" v-if="songs">
         <ul class="song-ul">
             <li  class="song-li" v-for="(song,index) in songs" @click="selectItem(song,index)">
-               <div class="mun-left">
+               <div class="mun-left" v-if="showNum">
                   <p :class="{'before-third': index<=2&&rank, 'rank-num':rank}"> {{index+1}}</p>
                     <p v-if="rank" class='rank-change-num'>{{song.inCount}}</p>
                 </div> 
@@ -26,6 +26,10 @@ export default {
         rank:{
             type:Boolean,
             default:false,
+        },
+        showNum:{
+            type:Boolean,
+            default:true,
         }
     },
     methods:{

@@ -22,9 +22,7 @@
       <div class="swiper-scrollbar"></div>
     </div>
     </div>
-    <transition name='searchbox'>
-      <search class='search-box' v-if='showSearch'></search>
-    </transition>
+    
     
   </div>
 </template>
@@ -218,19 +216,5 @@
     top: 0px;
     left: 0px;
   }
-.search-box{
-  width:100%;
-  position :fixed;
-  top:51px;
-  bottom :45px;
-  z-index:20;
-  background-color :$color-background;
-  }
 
-.searchbox-enter,.searchbox-leave-to{
-  transform :translateY(100%);
-  }
-.searchbox-enter-active, .searchbox-leave-active{
-  transition :all 0.4s;
-  }
 </style>

@@ -75,7 +75,7 @@
   .rank {
     width: 100%;
     height: 100%;
-
+    background-color :rgb(245, 245, 245);
   }
 
   .top-wrapper {

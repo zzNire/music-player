@@ -15,8 +15,8 @@
           :search-history="searchHistory"></search-list>
       </div>
     </scroll>
-    <div class='search-result' v-else>
-      <suggest :search-result="result" ref="suggest"></suggest>
+    <div class='suggest-result' v-else>
+      <suggest :search-result="result" ref="suggest" :searchMode='searchMode'></suggest>
     </div>
 
   </div>
@@ -40,12 +40,18 @@
 
 
   export default {
-  
+    
     components: {
       Suggest,
       SearchList,
       Confirm,
       Scroll,
+    },
+    props:{
+      searchMode: {
+        type: Boolean,
+        default: false,
+      }
     },
     data() {
       return {
@@ -170,7 +176,7 @@
   .search {
     color: black;
     box-sizing: border-box;
-    padding: 0 5px;
+    padding: 0 10px;
     width: 100%;
 
   }
@@ -180,9 +186,9 @@
     overflow :hidden;
   }
 
-  .search-result {
-    width: 100%;
-    height: 100%;
+  .suggest-result {
+   width:100%;
+   height :100%;
   }
 
   .hotkey-list {

@@ -23,7 +23,9 @@
             <p class='no-result-text'>无结果</p>
         </div>
         </scroll> 
-        
+        <transition name="alert">
+    <alert  class="alert-component"  :title="'1首已添加到播放列表'" v-if="showAlert"></alert>
+    </transition>
     </div>
    
 </template>
@@ -33,6 +35,7 @@
 import {mapGetters, mapMutations,mapActions} from 'vuex'
 import Scroll from '../../base/scroll/scroll.vue'
 import Loading from '../../base/loading/loading.vue'
+import Alert from '../../base/alert/alert.vue'
 import Bus from '../../commom/js/bus.js'
 const TYPE_SINGER = 'singer';
 const TYPE_SONG = 'song'
@@ -40,6 +43,7 @@ export default {
     components:{
         Scroll,
         Loading,
+        Alert
        
     },
     props:{
@@ -51,11 +55,15 @@ export default {
             type:Array,
             default:[],
         },
+      searchMode: {
+        type: Boolean,
+        default: false,
+      },
         
     },
     data(){
         return {
-        
+        showAlert:false,
         }
     },
     computed:{
@@ -90,6 +98,14 @@ export default {
         },
         clickSong(song,index){
             this.insertSong(song);
+            if(this.searchMode){
+                this.showAlert = true;
+                setTimeout(()=>{
+                this.showAlert = false;
+            },1000);
+            }
+           
+            
         },
         listScroll(){
             Bus.$emit('unfocus');
@@ -173,4 +189,11 @@ export default {
   
     margin-top:50px;
 }
+
+ .alert-enter , .alert-leave-to{
+     opacity :0;
+     }    
+ .alert-enter-active, .alert-leave-active{
+     transition :all 0.5s;
+     }  
 </style>

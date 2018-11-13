@@ -143,7 +143,8 @@
 <script>
   import {
     mapGetters,
-    mapMutations
+    mapMutations,
+    mapActions,
   } from 'vuex'
   import animations from 'create-keyframe-animation'
   import {
@@ -218,6 +219,9 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
     },
 
     methods: {
+      ...mapActions([
+        'storePlayHistory',
+      ]),
       minimizePlayer() {
         this.setPlayer(false);
         // console.log(this.$refs.miniIcon);
@@ -352,6 +356,7 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
         this.songReady = false;
       },
       ready(e) {
+        this.storePlayHistory(this.currentSong);
         this.songReady = true;
         console.log(this.$refs.audio.duration);
         this.songLength = e.target.duration;

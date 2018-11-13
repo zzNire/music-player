@@ -5,7 +5,8 @@ import {
 import {
   shuffle
 } from '../commom/js/utils';
-import {saveSearch ,clearSearch, deleteSearchItem} from '../commom/js/catch.js'
+import {saveSearch ,clearSearch, deleteSearchItem, savePlayHistory } from '../commom/js/catch.js'
+
 function findIndex(list, song) {
   return list.findIndex((item) => {
     return item.id === song.id;
@@ -40,11 +41,20 @@ export const insertSong = function(context,song){
   let sequenceList = context.state.sequenceList.slice();
   let currentindex = context.state.currentIndex;
 
+  
   //记录当前歌曲
   let currentSong = playlist[currentindex];
 
-  let findSongIndex = findIndex(playlist,song)
-  //插入歌曲
+  let findSongIndex = findIndex(playlist,song);
+  if(context.state.searchMode)
+  { 
+    if(findSongIndex === -1){
+      playlist.splice(playlist.length,0,song);
+    }
+  }
+  else
+  {
+    //插入歌曲
   currentindex++;
   playlist.splice(currentindex,0,song);
   //已存在歌曲
@@ -56,10 +66,18 @@ export const insertSong = function(context,song){
       playlist.splice(findSongIndex+1,1);
     }
   }
+  }
+  
 
   let currentSIndex = findIndex(sequenceList,currentSong);
   let fsIndex = findIndex(sequenceList,song);
-  currentSIndex++;
+  if(context.state.searchMode){
+    if(fsIndex === -1){
+      sequenceList.splice(sequenceList.length,0,song);
+    }
+  }
+  else{
+    currentSIndex++;
   sequenceList.splice(currentSIndex,0,song);
   if(fsIndex > -1){
     if(currentSIndex > fsIndex){
@@ -70,13 +88,21 @@ export const insertSong = function(context,song){
       sequenceList.splice(fsIndex+1,1);
     }
   }
+  }
   
-  context.commit(types.SET_FULL_SCREEN,true);
   context.commit(types.SET_PLAY_LIST,playlist);
   context.commit(types.SET_SEQUENCE_LIST,sequenceList);
-  context.commit(types.SET_CURRENT_INDEX,currentindex);
-  context.commit(types.SET_PLAYING,true);
+  
 
+  if(context.state.searchMode){
+   
+  }
+  else{
+  context.commit(types.SET_CURRENT_INDEX,currentindex); 
+  context.commit(types.SET_FULL_SCREEN,true);
+  context.commit(types.SET_PLAYING,true);
+  } 
+  
 
 } 
 
@@ -134,3 +160,8 @@ export const deleteAllPlayList = function(context){
   context.commit(types.SET_PLAYING,false);
   context.commit(types.SET_CURRENT_INDEX,-1);
 }
+
+export const storePlayHistory = function(context,song){
+  context.commit(types.SET_PLAYHISTORY,savePlayHistory(song))
+}
+

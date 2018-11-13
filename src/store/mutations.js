@@ -61,6 +61,12 @@ const mutations = {
     },
     [types.SET_SHOWPARAM](state,flag){
         state.showParam = flag;
+    },
+    [types.SET_PLAYHISTORY](state,flag){
+        state.playHistory = flag;
+    },
+    [types.SET_SEARCHMODE](state,flag){
+        state.searchMode = flag;
     }
 
 
