@@ -14,9 +14,10 @@
        
       </div>
       <div class="result-content">
+        <scroll :data="playHistory" class="scroll">
           <song-list v-if="rightTab===0" :songs="playHistory" :showNum='false'
           @songSelect='songSelect'></song-list>
-          
+        </scroll>
       </div>
     </div>
     <transition name="maxsearch">
@@ -40,6 +41,7 @@
   import MyHeader from '../../components/header.vue'
   import SongList from '../../base/song-list/song-list.vue'
   import Alert from '../../base/alert/alert.vue'
+  import Scroll from "../scroll/scroll.vue"
   import {prefixStyle} from '../../commom/js/dom.js'
     import Song from '../../commom/js/song.js'
   import {mapGetters, mapActions} from 'vuex'
@@ -52,7 +54,8 @@ import { setTimeout } from 'timers';
       Search,
       MyHeader,
       SongList,
-      Alert
+      Alert,
+      Scroll
     },
     data() {
       return {
@@ -97,7 +100,7 @@ import { setTimeout } from 'timers';
       },
       songSelect(song,index){
           if(index !== -1){
-              this.insertSong(new Song(song));
+              this.insertSong(new Song(song));  //提示窗口
             this.showAlert = true;
             setTimeout(()=>{
                 this.showAlert = false;
@@ -146,19 +149,23 @@ import { setTimeout } from 'timers';
 
   .content {
     background-color: white;
-    padding: 10px 0;
-    height :100%;
+    height:100%;
+   
+    width:100%;
+      overflow :hidden;
+    
+    
   }
 
   .tab {
 
     width: 50%;
-    margin: 0 auto;
+    margin: 10px auto;
     display: flex;
     text-align: center;
     font-size: 14px;
     border: 1px solid $color-sub-theme;
-    margin-top :5px;
+    
   }
 
   .recent-play {
@@ -176,11 +183,19 @@ import { setTimeout } from 'timers';
     background-color: $color-sub-theme;
   }
 .result-content{
-    width:90%;
-    margin :0 auto;   
-    margin-top:10px;
+    width:100%;
+   
+    margin :0 20px;
+    
+    position :fixed;
+    bottom:0px;
+    top:142px;
+   
     }
-
+.scroll{
+  height :100%;
+  overflow :hidden;
+}
 .max-search{
     width :100%;
     height :100%;

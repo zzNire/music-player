@@ -75,7 +75,8 @@
               <i class='icon-FORWARD-2'></i>
             </div>
             <div class="btn-icon">
-              <i class='icon-like'></i>
+              <i class='icon-like' :class="getFavoriteIcon(currentSong)"
+              @click="toggltFavoriteSong(currentSong)"></i>
             </div>
 
 
@@ -94,8 +95,8 @@
             ref="miniIcon" />
         </div>
         <div class='song-item'>
-          <p class="song-name">{{currentSong.songname}}</p>
-          <p class="singer-name">{{currentSong.name}}</p>
+          <p class="song-name" v-html="currentSong.songname"></p>
+          <p class="singer-name" v-html="currentSong.name"></p>
         </div>
         <div class='player-contral'>
           <progress-circle class='progress-circle' :radius="30" :color="'#D44439'" :process="currentTime/songLength">
@@ -158,10 +159,14 @@
   import LyricComponent from '../../base/lyric/lyric.vue'
   import PlayList from '../../base/play-list/play-list.vue'
   import {getLyric} from '../../api/song.js'
+  import {playListMixin} from '../../commom/js/mixin.js'
 import { setTimeout, setInterval, clearInterval } from 'timers';
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
   export default {
+    mixins:[
+      playListMixin
+    ],
     components:{
       ProgressBar,
       ProgressCircle,
@@ -308,10 +313,7 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
       },
       musicPlaying() {
         this.setPlaying(!this.playing);
-        if(this.currentLyric)
-        {
-          this.currentLyric.togglePlay();
-        }
+        
       },
       preSong() {
          if(this.playing.length === 1){
@@ -564,6 +566,10 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
           if(!audio) return ;
           if (newplaying) { 
             audio.play();
+            if(this.currentLyric)
+            {
+              this.currentLyric.togglePlay();
+            }
             let v = 0;
             var t = setInterval(()=>{
               v+=0.1;
@@ -583,6 +589,10 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
                 audio.volume = v;
               }else{
                 audio.pause();
+                if(this.currentLyric)
+                {
+                   this.currentLyric.togglePlay();
+                }
                 clearInterval(t);
               }
             },100)
@@ -817,7 +827,13 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
 
   .header-song-name {
     font-size: 15px;
+    margin:0 40px;
     margin-bottom: 7px;
+   white-space :nowrap;
+   overflow:hidden;
+   text-overflow:ellipsis
+
+    
   }
 
   .header-singer-name {
@@ -846,7 +862,7 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
     width:100%;
     text-align :center;
     box-sizing :border-box;
-    padding:20px 20px;
+    padding:20px 30px;
     font-size:14px;
     line-height :30px;
     font-weight:lighter;
@@ -1051,6 +1067,15 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
     content: "\e903";
      color: rgba(221, 221, 221, 0.5);
   }
+
+  .icon-like-fil:before{
+     width: 30px;
+    length: 30px;
+    padding: 10px 0;
+    display: inline-block;
+    content: "\e904";
+    color:$color-sub-theme;
+    }
 
   .disableClass {
     color: gray;

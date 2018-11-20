@@ -45,3 +45,5 @@ export const showParam = state => state.showParam;
 export const playHistory = state => state.playHistory;
 
 export const searchMode = state => state.searchMode;
+
+export const favoriteList = state => state.favoriteList;

@@ -119,6 +119,7 @@ export default {
     padding-right:10px;
      overflow :hidden;
      text-overflow :ellipsis;
+     
 }
 
 .before-third{

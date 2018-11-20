@@ -24,8 +24,11 @@
                   <span class="singer-name" v-html="' - '+song.singer[0].name" :class="{'playing' : index === rightIndex}">
                   </span></span>
               </div>
-              <div class='list-icon' @click="removeSong(song)">
-                <i class="icon-x"></i>
+
+              <div class='list-icon' >
+                <i class="icon-like"> </i>
+                <i class="icon-x" @click="removeSong(song)"></i>
+                
               </div>
             </li>
           </transition-group>
@@ -181,7 +184,8 @@
       }
     },
     watch: {
-      rightIndex(newIndex) {
+      rightIndex(newIndex,oldIndex) {
+        if(this.seqList[newIndex].id === this.seqList[oldIndex].id) return ;
         this.scrollToSong(newIndex);
 
       }
@@ -193,6 +197,7 @@
 
 <style lang="stylus" scoped>
   @import '../../commom/stylus/style.css';
+
   @import '../../commom/stylus/variable.styl';
 
   .background {
@@ -266,7 +271,7 @@
   }
 
   .icon-trash-2:before {
-    content: "\e90e";
+   content: "\e90f";
   }
 
   .content {
@@ -308,7 +313,7 @@
 
   .list-icon {
     text-align: center;
-    flex: 20px 0 0;
+    flex: 45px 0 0;
   }
 
   .song-detail {
@@ -321,10 +326,21 @@
     font-size: 20px;
     vertical-align: middle;
   }
-
+  .icon-like{
+     display :inline-block;
+  }
+.icon-like:before {
+  content: "\e903";
+   color: gray;
+    font-size: 20px;
+    vertical-align: middle;
+}
+.icon-x{
+  display :inline-block;
+}
   .icon-x:before {
     color: gray;
-    content: "\e90f";
+    content: "\e910";
     font-size: 18px;
     vertical-align: middle;
   }

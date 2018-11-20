@@ -1,5 +1,5 @@
 import {playMode} from '../commom/js/config.js'
-import {getSearch} from '../commom/js/catch.js'
+import {getSearch,getFavoriteList} from '../commom/js/catch.js'
 const state = {
     singer:{
 
@@ -34,6 +34,7 @@ const state = {
 
     playHistory:[],
     searchMode:false,
+    favoriteList:getFavoriteList(),
 }
 
 export default state;

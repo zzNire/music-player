@@ -51,6 +51,14 @@
       searchMode: {
         type: Boolean,
         default: false,
+      },
+      searchResult:{
+        type:Array,
+        default:[],
+      },
+      searchText:{
+        typr:String,
+        default:'',
       }
     },
     data() {
@@ -77,8 +85,8 @@
     },
     computed: {
       ...mapGetters([
-        'searchText',
-        'searchResult',
+        //'searchText',
+       // 'searchResult',
         'searchP',
         'searchHistory'
       ]),
@@ -96,10 +104,11 @@
         })
       },
       selectKey(key) {
-        this.setSearchText(key.substr(0, key.length - 1));
+         this.$emit('setSearchText',key.substr(0, key.length - 1));
+        //this.setSearchText(key.substr(0, key.length - 1));
       },
       ...mapMutations({
-        setSearchText: 'SET_SEARCHTEXT',
+      //  setSearchText: 'SET_SEARCHTEXT',
         setP: 'SET_P',
         setShowConfirm: 'SET_SHOWCONFIRM',
         setConfirmParam: 'SET_SHOWPARAM',
@@ -120,7 +129,8 @@
         });
       },
       selectItem(index) {
-        this.setSearchText(this.searchHistory[index]);
+        this.$emit('setSearchText',this.searchHistory[index]);
+        //this.setSearchText(this.searchHistory[index]);
       },
       clearAll() {
         let confirmParam = {
@@ -152,7 +162,9 @@
         }
         if (this.searchP !== 1) {
           console.log('concat');
-          this.result = this.result.concat(list);
+          let shiftList = list.slice();
+          shiftList.shift();
+          this.result = this.result.concat(shiftList);
         } else {
           this.result = list;
           if (this.$refs.suggest) {

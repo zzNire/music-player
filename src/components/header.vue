@@ -3,13 +3,16 @@
   
       <div class="content" ref="headerContent" :class="{'add-content':searchMode}">
         <transition name="left-max">
-          <div class="icon-left" ref="left" v-if="!ismaxSearchBox&&!searchMode">
+          <div class="icon-left" ref="left" v-if="!ismaxSearchBox&&!searchMode"
+          @click="showUserCenter">
             <i class="icon-playlist"></i>
           </div>
         </transition>
         <div class='middle' @click="maxSearchBox" ref="middle">
           <p class="player-name" v-if="!search">NIREANMUSIC</p>
-          <search-box class='search-box' :color="'white'" v-else ref="searchBox" @searchText='searchTextChange'></search-box>
+          <search-box class='search-box' :color="'white'" v-else ref="searchBox" 
+          @searchText='searchTextChange'
+          @searchboxClear='clearSearchBox'></search-box>
         </div>
         <div class="icon" ref="right">
           <transition name='cancle' mode="out-in">
@@ -22,7 +25,14 @@
     <transition :name='transitionName'>
       <search class='search-result' :class="{'search-result-addsong':searchMode}" 
       :searchMode='searchMode'
-      v-if='showSearch'></search>
+      v-if='showSearch'
+      :search-result="searchResult"
+      :searchText="searchText"
+      @setSearchText = 'searchTextChange'></search>
+    </transition>
+
+    <transition name="user-center">
+      <user-center v-if="userCenter" class="user-center-component" @closeUserCenter='closeUserCenter'></user-center>
     </transition>
   </div>
 </template>
@@ -30,6 +40,7 @@
 
 <script>
   import SearchBox from '../base/search-box/search-box.vue'
+  import UserCenter from '../components/user-center/user-center.vue'
   import {
     search
   } from '../api/search.js'
@@ -55,6 +66,7 @@
     components: {
       SearchBox,
       Search,
+      UserCenter,
 
     },
     props: {
@@ -74,6 +86,9 @@
         perpage: 20,
         hasMore: true,
         showSearch: false,
+        searchResult:[],
+        searchText:'',
+        userCenter:false,
       }
     },
     created() {
@@ -99,7 +114,7 @@
 
     computed: {
       ...mapGetters([
-        'searchText',
+        //'searchText',
         'searchP',
         'listScroll',
 
@@ -138,6 +153,7 @@
         this.ismaxSearchBox = false;
         this.showSearch = false;
         this.$refs.searchBox.clearText();
+        this.searchText = '';
         this.$emit('closeSearchBox');
          if (this.searchMode) {
           console.log(this.$refs.headerContent);
@@ -147,10 +163,13 @@
         //  this.$refs.left.style.left='-46px';
         // this.$refs.left.style.transition = 'all 5s';
       },
+      clearSearchBox(){
+        this.searchText = '';
+      },
       ...mapMutations({
 
-        setSearchText: 'SET_SEARCHTEXT',
-        setSearchResult: 'SET_SEARCHRESULT',
+       // setSearchText: 'SET_SEARCHTEXT',
+      //  setSearchResult: 'SET_SEARCHRESULT',
         setPerpage: 'SET_PERPAGE',
         setP: 'SET_P',
         setHasMore: 'SET_HASMORE',
@@ -162,10 +181,11 @@
       searchTextChange(text) {
         if (text === this.searchText) return;
         console.log('change');
-        this.setSearchText(text);
-
+        this.searchText = text;
+        this.$refs.searchBox.setSearchBox(text);
       },
       search() {
+        console.log("start search");
         this.setPerpage(this.perpage);
         search(this.searchText, this.searchP, this.showSinger, this.perpage).then((res) => {
           console.log(res);
@@ -175,7 +195,7 @@
             this.setHasMore(this.hasMore);
             this.searchResult = this.resultFilter(res.data)
             console.log(this.searchResult);
-            this.setSearchResult(this.searchResult);
+          //  this.setSearchResult(this.searchResult);
           }
         });
       },
@@ -201,7 +221,7 @@
           });
           // result = result.concat(data.song.list);
         }
-        //console.log(result);
+        console.log(result);
         return result;
       },
       checkMore(data) { //下拉是否可以再请求数据
@@ -221,20 +241,27 @@
           })
          
         }
+      },
+      showUserCenter(){
+        this.userCenter = true;
+      },
+      closeUserCenter(){
+        this.userCenter = false;
       }
 
     },
     watch: {
       searchText(text) {
         if (text) {
+          console.log("watch searchtext");
+          this.setP(1); //初始化当前页 
           this.search();
-          this.setP(1); //初始化当前页
           this.saveSearch(text);
 
         }
-        if (!text) this.setSearchResult([]);
+       // if (!text) this.setSearchResult([]);
 
-        this.$refs.searchBox.setSearchText(text);
+        //this.$refs.searchBox.setSearchText(text);
       },
       searchP(newP, oldP) {
         if (newP === 1) return;
@@ -348,7 +375,8 @@
     top: 50%;
     left: 0;
     transform: translateY(-50%);
-
+    
+     text-align:center;
   }
 
   .left-max-enter,
@@ -367,6 +395,9 @@
   }
 
   .icon-playlist {
+   vertical-align :middle;
+    position :relative;
+    
     display: inline-block;
     font-size: 20px;
   }
@@ -413,4 +444,18 @@
 .search-result-addsong{
   bottom:0px;
 }
+
+.user-center-component{
+   z-index: 20;
+  }
+
+ .user-center-enter,
+  .user-center-leave-to {
+    transform: translateX(-100%);
+  }
+
+  .user-center-enter-active,
+  .user-center-leave-active {
+    transition: all 0.4s;
+  }
 </style>

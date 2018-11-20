@@ -5,7 +5,7 @@ import {
 import {
   shuffle
 } from '../commom/js/utils';
-import {saveSearch ,clearSearch, deleteSearchItem, savePlayHistory } from '../commom/js/catch.js'
+import {saveSearch ,clearSearch, deleteSearchItem, savePlayHistory,saveFavorite,deleteFavorite} from '../commom/js/catch.js'
 
 function findIndex(list, song) {
   return list.findIndex((item) => {
@@ -165,3 +165,10 @@ export const storePlayHistory = function(context,song){
   context.commit(types.SET_PLAYHISTORY,savePlayHistory(song))
 }
 
+export const saveFavoriteList = function(context,song){
+  context.commit(types.SET_FAVORITELIST,saveFavorite(song));
+}
+
+export const deleteFavoriteList = function(context,song){
+  context.commit(types.SET_FAVORITELIST,deleteFavorite(song));
+}

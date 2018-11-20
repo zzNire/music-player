@@ -35,7 +35,8 @@ import {debounce} from '../../commom/js/utils.js'
     },
     created(){
         this.$watch('searchText',debounce((newText)=>{
-          
+          console.log(newText+" "+this.searchText);
+         // if(newText ===  this.searchText) return ;
             this.$emit('searchText',newText);
            // if(newText === this.searchText) return ;
            // this.setSearchText(newText);
@@ -44,6 +45,7 @@ import {debounce} from '../../commom/js/utils.js'
     methods:{
         clearText(){
             this.searchText = '';
+            this.$emit("searchboxClear");
         },
         focus(){
             this.$refs.input.focus();
@@ -53,6 +55,9 @@ import {debounce} from '../../commom/js/utils.js'
         },
         unfocus(){
           this.$refs.input.blur();
+        },
+        setSearchBox(text){
+          this.searchText = text;
         }
        
     }

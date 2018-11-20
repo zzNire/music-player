@@ -182,12 +182,13 @@
 
 
   .recommend-song {
-    margin: 10px;
+    margin: 10px 3px;
   }
 
   .recommend-title {
     color: $color-highlight-background;
     margin-bottom: 10px;
+    margin-left :2px;
     font-size: 14px;
     font-weight: 600;
   }
@@ -228,11 +229,12 @@
     position: relative;
     display: inline-block;
     width: 33.33%;
-    padding-right: 3px;
+    padding:0 2px;
     overflow: hidden;
     text-overflow: ellipsis;
     box-sizing: border-box;
   }
+
 
   .recommend-a {}
 

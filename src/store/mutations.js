@@ -67,6 +67,9 @@ const mutations = {
     },
     [types.SET_SEARCHMODE](state,flag){
         state.searchMode = flag;
+    },
+    [types.SET_FAVORITELIST](state,flag){
+        state.favoriteList = flag;
     }
 
 
