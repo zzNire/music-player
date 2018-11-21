@@ -2,6 +2,8 @@
     localStorage 存取实现
 */
 import storage from 'good-storage'
+import Song from '../../commom/js/song'
+
 
 const SEARCH_KEY = '__search__';
 const SEARCH_MAX_LENGTH = 15;
@@ -33,6 +35,25 @@ function deleteItem(arr,compare){
     }
     
 }
+
+function initSong(songs){
+    let newSongs = [];
+    songs.forEach(song => {
+        let newSong = new Song({
+            id: song.id,
+            mid: song.mid,
+            name: song.name,
+            album: song.album,
+            duration: song.duration,
+            songname: song.songname,
+            singer: song.singer,
+            image: song.image,
+           url: song.url,
+          });
+        newSongs.push(newSong);
+    });
+    return newSongs;
+}
 export function saveSearch(text){
     let searches = storage.get(SEARCH_KEY,[]);
     insertArray(searches,text,(item)=>{
@@ -53,7 +74,7 @@ export function clearSearch(){
 }
 
 export function deleteSearchItem(text){
-    let searches = storage.get(SEARCH_KEY,[]);
+    let searches = initSong(storage.get(SEARCH_KEY,[]));
     deleteItem(searches,(item)=>{
        return item === text;
     })
@@ -62,7 +83,7 @@ export function deleteSearchItem(text){
 }
 
 export function savePlayHistory(song){
-    let playHistory = storage.get(PLAY_HISTORY,[]);
+    let playHistory = initSong(storage.get(PLAY_HISTORY,[]));
     insertArray(playHistory,song,(item)=>{
         return item.id === song.id
     },PLAY_MAX_LENGTH);
@@ -72,10 +93,13 @@ export function savePlayHistory(song){
 
 }
 
+export function getPlayHistory(){
+    return initSong( storage.get(PLAY_HISTORY,[]));
+}
 
 export function deleteFavorite(song){
-    let songs = storage.get(FAVORITE_KEY,[]);
-    deleteItem(songs,song,(item)=>{
+    let songs =initSong( storage.get(FAVORITE_KEY,[]));
+    deleteItem(songs,(item)=>{
         return item.id === song.id
     });
     storage.set(FAVORITE_KEY,songs);
@@ -83,7 +107,7 @@ export function deleteFavorite(song){
 }
 
 export function saveFavorite(song){
-    let songs = storage.get(FAVORITE_KEY,[]);
+    let songs = initSong(storage.get(FAVORITE_KEY,[]));
     insertArray(songs,song,(item)=>{
         return item.id === song.id
     },FAVORITE_LENGTH);
@@ -92,5 +116,5 @@ export function saveFavorite(song){
 }
 
 export function getFavoriteList(){
-    return storage.get(FAVORITE_KEY,[]);
+    return initSong(storage.get(FAVORITE_KEY,[]));
 }

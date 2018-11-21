@@ -26,7 +26,8 @@
               </div>
 
               <div class='list-icon' >
-                <i class="icon-like"> </i>
+                <i  :class="getFavoriteIcon(song)"
+                @click="toggltFavoriteSong(song)"> </i>
                 <i class="icon-x" @click="removeSong(song)"></i>
                 
               </div>
@@ -60,13 +61,16 @@
   import Scroll from '../../base/scroll/scroll.vue'
   import AddSong from './add-song.vue'
    import Bus from '../../commom/js/bus.js'
+   import {playListMixin} from '../../commom/js/mixin.js'
   import {
     mapGetters,
     mapMutations,
     mapActions
   } from 'vuex'
   export default {
-   
+   mixins:[
+     playListMixin,
+   ],
     components: {
       Scroll,
       AddSong,
@@ -115,7 +119,8 @@
           this.mode === playMode.random ? '随机播放' : '单曲循环'
       },
       ...mapGetters([
-        'playList'
+        'playList',
+        
       ])
     },
     methods: {
@@ -185,6 +190,7 @@
     },
     watch: {
       rightIndex(newIndex,oldIndex) {
+        console.log(newIndex,oldIndex);
         if(this.seqList[newIndex].id === this.seqList[oldIndex].id) return ;
         this.scrollToSong(newIndex);
 
@@ -322,10 +328,11 @@
   }
 
   .icon-readingplan:before {
-    content: "\e90d";
+    content: "\e90b";
     font-size: 20px;
     vertical-align: middle;
   }
+
   .icon-like{
      display :inline-block;
   }
@@ -334,6 +341,18 @@
    color: gray;
     font-size: 20px;
     vertical-align: middle;
+}
+
+.icon-like-fill{
+   display :inline-block;
+   
+}
+
+.icon-like-fill:before {
+  content: "\e904";
+    font-size: 20px;
+    vertical-align: middle;
+    color:$color-sub-theme;
 }
 .icon-x{
   display :inline-block;

@@ -11,8 +11,9 @@
         <div class='middle' @click="maxSearchBox" ref="middle">
           <p class="player-name" v-if="!search">NIREANMUSIC</p>
           <search-box class='search-box' :color="'white'" v-else ref="searchBox" 
-          @searchText='searchTextChange'
-          @searchboxClear='clearSearchBox'></search-box>
+          @searchText='searchTextChangeBox'
+          @searchboxClear='clearSearchBox'
+          @clearResult="clearResult"></search-box>
         </div>
         <div class="icon" ref="right">
           <transition name='cancle' mode="out-in">
@@ -28,7 +29,9 @@
       v-if='showSearch'
       :search-result="searchResult"
       :searchText="searchText"
-      @setSearchText = 'searchTextChange'></search>
+      :show-search-commond="showSearchCommond"
+      @setSearchText = 'searchTextChange'
+      @startSearch="startSearch"></search>
     </transition>
 
     <transition name="user-center">
@@ -89,6 +92,7 @@
         searchResult:[],
         searchText:'',
         userCenter:false,
+        showSearchCommond:true,
       }
     },
     created() {
@@ -165,7 +169,23 @@
       },
       clearSearchBox(){
         this.searchText = '';
+        this.searchResult = [];
       },
+      startSearch(){  //开始搜索
+       
+        if (this.searchText) {
+          console.log("watch searchtext");
+          this.setP(1); //初始化当前页 
+          this.search();
+          this.saveSearch(this.searchText);
+
+        }
+       // if (!text) this.setSearchResult([]);
+
+        //this.$refs.searchBox.setSearchText(text);
+      },
+     
+    
       ...mapMutations({
 
        // setSearchText: 'SET_SEARCHTEXT',
@@ -178,11 +198,27 @@
       ...mapActions([
         'saveSearchHistory'
       ]),
-      searchTextChange(text) {
-        if (text === this.searchText) return;
+      searchTextChangeBox(text){
+      if (text === this.searchText) return;
         console.log('change');
         this.searchText = text;
+        this.showSearchCommond = true;
+       // this.searchText = "";
+       // this.$refs.searchBox.setSearchBox(text);
+      },
+      searchTextChange(text) {
+        if (text === this.searchText) return;
+        this.showSearchCommond = false;
+        console.log('change');
+        this.searchText = text;
+        this.search();
+       // this.searchText = "";
         this.$refs.searchBox.setSearchBox(text);
+
+      },
+      clearResult(){
+        this.searchResult = [];
+        this.showSearchCommond = true;
       },
       search() {
         console.log("start search");
@@ -251,17 +287,8 @@
 
     },
     watch: {
-      searchText(text) {
-        if (text) {
-          console.log("watch searchtext");
-          this.setP(1); //初始化当前页 
-          this.search();
-          this.saveSearch(text);
-
-        }
-       // if (!text) this.setSearchResult([]);
-
-        //this.$refs.searchBox.setSearchText(text);
+      searchText(){
+        this.setP(1);
       },
       searchP(newP, oldP) {
         if (newP === 1) return;

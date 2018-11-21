@@ -16,7 +16,10 @@
       </div>
     </scroll>
     <div class='suggest-result' v-else>
-      <suggest :search-result="result" ref="suggest" :searchMode='searchMode'></suggest>
+      <div class="search-recommend" @click="startSearch" v-if="showSearchCommond && !searchResult.length" >
+        <p >搜索 “{{searchText}}”</p>
+      </div>
+      <suggest :search-result="result" ref="suggest" :searchMode='searchMode'  v-if="searchResult.length"></suggest>
     </div>
 
   </div>
@@ -59,6 +62,10 @@
       searchText:{
         typr:String,
         default:'',
+      },
+      showSearchCommond:{
+        type:Boolean,
+        default:true,
       }
     },
     data() {
@@ -128,6 +135,9 @@
           }
         });
       },
+      startSearch(){
+        this.$emit('startSearch');
+      },
       selectItem(index) {
         this.$emit('setSearchText',this.searchHistory[index]);
         //this.setSearchText(this.searchHistory[index]);
@@ -185,6 +195,7 @@
 
 
 <style lang="stylus" scoped>
+@import '../../commom/stylus/variable.styl';
   .search {
     color: black;
     box-sizing: border-box;
@@ -227,5 +238,11 @@
 
 .search-list{
     margin-top:20px;
+}
+
+.search-recommend{
+  color:$color-sub-theme;
+  padding:10px 0;
+  border-bottom  :solid 1px rgba(240,240,240,1);
 }
 </style>

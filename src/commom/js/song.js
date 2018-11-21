@@ -30,9 +30,9 @@ export default class Song {
     this.image = image;
     this.url = url;
     this.songname = songname;
-    this.inCount = inCount
+   
   }
-  getLyric() {
+  getMyLyric() {
     if (this.lyric) return Promise.resolve(this.lyric);
     return new Promise((resolve, reject) => {
       getLyric(this.mid).then((res) => {
@@ -51,7 +51,7 @@ export default class Song {
   }
 }
 
-export function createSong(musicData, in_count) {
+export function createSong(musicData) {
  //let vkey = getSongSource(musicData.songmid);
  //console.log(vkey);
   return new Song({
@@ -68,7 +68,7 @@ export function createSong(musicData, in_count) {
     //url: `http://ws.stream.qqmusic.qq.com/C100${musicData.songmid}.m4a?fromtag=0&guid=126548448`,
     //url:`http://isure.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?guid=6780662315&vkey=${vkey}&uin=0&fromtag=66`
     // 'http://isure.stream.qqmusic.qq.com/C400001Qu4I30eVFYb.m4a?guid=6780662315&vkey=B3C5B9D48E1179611FE99F3D01DA0C794649131083DD331C69475798919CB4E7DD311097732656FBE6E94DE9331D6B644B6B5FDC0CB3969F&uin=0&fromtag=66'
-    inCount:countFilter(in_count),
+  
     //http://121.51.2.70/amobile.music.tc.qq.com/C400000FTx4w1obE49.m4a?guid=6974902429&vkey=F06A3EB178167115BF565F49751E3F5F525040027D903D4FA32F70ED7E7FD9BD19DA9981E3599C3DBD87851EAB31F919FB89896470BA2D9C&uin=0&fromtag=66
   })
 

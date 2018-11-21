@@ -18,7 +18,7 @@ export const playListMixin = {
         },
         getFavoriteIcon(song){
             if(this.isFavorite(song)){
-                return 'icon-like-fil';
+                return 'icon-like-fill';
             }
             else{
                 return 'icon-like'

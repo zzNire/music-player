@@ -1,7 +1,8 @@
 <template>
   <div class='search-box'>
     <input class='box' :placeholder="placeholder" v-model="searchText" ref="input"
-    :style="{color:color,fontSize:fontSize}">
+    :style="{color:color,fontSize:fontSize}"
+    @focus="clearResult">
     <i class='icon-search'></i>
     <i class='icon-dismiss' v-if="searchText" @click="clearText"></i>
     </input>
@@ -58,6 +59,9 @@ import {debounce} from '../../commom/js/utils.js'
         },
         setSearchBox(text){
           this.searchText = text;
+        },
+        clearResult(){
+          this.$emit('clearResult');
         }
        
     }

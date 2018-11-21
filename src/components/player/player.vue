@@ -25,7 +25,9 @@
             
           </div>
           <div class='mini-lyric' >
-              <p class='mini-lyric-txt' v-html="defaultLyric" ></p>  
+              <p class='mini-lyric-txt' v-html="defaultLyric"  v-if="currentLyric" ></p>  
+               <p class='mini-default-lyrics' v-else>歌词加载中...</p>
+           
             </div>
         </div>
           <div class='lyric-component'   ref="lyric" >
@@ -75,7 +77,7 @@
               <i class='icon-FORWARD-2'></i>
             </div>
             <div class="btn-icon">
-              <i class='icon-like' :class="getFavoriteIcon(currentSong)"
+              <i  :class="getFavoriteIcon(currentSong)"
               @click="toggltFavoriteSong(currentSong)"></i>
             </div>
 
@@ -160,7 +162,7 @@
   import PlayList from '../../base/play-list/play-list.vue'
   import {getLyric} from '../../api/song.js'
   import {playListMixin} from '../../commom/js/mixin.js'
-import { setTimeout, setInterval, clearInterval } from 'timers';
+import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
   const transform = prefixStyle('transform')
   const transitionDuration = prefixStyle('transitionDuration')
   export default {
@@ -316,12 +318,13 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
         
       },
       preSong() {
-         if(this.playing.length === 1){
-          this.loop();
+         if (!this.songReady)
+          return;
+         if(this.playList.length === 1){
+          this.loop();    
           return;
         }
-        if (!this.songReady)
-          return;
+
         let index = this.currentIndex;
         if (index === 0) {
           index = this.playList.length - 1;
@@ -336,14 +339,13 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
         this.songReady = false;
       },
       nextSong() {
+         if (!this.songReady)
+          return;
         if(this.playList.length === 1){
           this.loop();
           return;
         }
-        
-        if (!this.songReady)
-          return;
-        let index = this.currentIndex
+        let index = this.currentIndex;
         if (index === this.playList.length - 1) {
           index = 0;
          
@@ -421,8 +423,12 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
         this.setIndex(index);
       },
       getLyric(){
-        this.currentSong.getLyric().then((res)=>{
+        console.log(this.currentSong);
+        console.log(this.currentSong.getMyLyric);
+       
+        this.currentSong.getMyLyric().then((res)=>{
           //console.log(res);
+           if(this.currentSong.lyric !== res) return ;
           this.currentLyricLineNum = 0;
           
           this.currentLyric = new Lyric(res,this.handleLyric);
@@ -553,7 +559,8 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
             this.currentLyric.stop();
             this.currentLyric = null;
         }
-        setTimeout(() => {
+        if(this.timer) clearTimeout(this.timer);
+        this.timer = setTimeout(() => {
           this.$refs.audio.play();
           this.getLyric();
         
@@ -565,25 +572,26 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
           const audio = this.$refs.audio;
           if(!audio) return ;
           if (newplaying) { 
+            if(this.t) clearInterval(this.t);
             audio.play();
             if(this.currentLyric)
             {
               this.currentLyric.togglePlay();
             }
             let v = 0;
-            var t = setInterval(()=>{
+            this.t = setInterval(()=>{
               v+=0.1;
               if(v<=1) audio.volume = v;
               else{
-                clearInterval(t);
+                clearInterval(this.t);
               }
             },100)
             
           } else {
-            
+            if(this.t) clearInterval(this.t);
             let v= audio.volume;
             console.log('volume'+v);
-            let t = setInterval(()=>{
+            this.t = setInterval(()=>{
               v-=0.1;
               if(v>=0){
                 audio.volume = v;
@@ -593,7 +601,7 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
                 {
                    this.currentLyric.togglePlay();
                 }
-                clearInterval(t);
+                clearInterval(this.t);
               }
             },100)
             
@@ -942,6 +950,14 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
    overflow :hidden;
    line-height :16px;
   }
+  .mini-default-lyrics{
+    margin:0 20px;
+    text-align :center;
+    font-size :15px;
+   overflow :hidden;
+   line-height :16px;
+     
+  }
   .control {
     width: 100%;
     position: absolute;
@@ -1068,7 +1084,7 @@ import { setTimeout, setInterval, clearInterval } from 'timers';
      color: rgba(221, 221, 221, 0.5);
   }
 
-  .icon-like-fil:before{
+  .icon-like-fill:before{
      width: 30px;
     length: 30px;
     padding: 10px 0;
