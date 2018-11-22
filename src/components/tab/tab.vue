@@ -211,7 +211,7 @@
   .swiper-scrollbar {
     padding: 5px 0px;
     border-radius: 0px;
-     width: 100%;
+    width: 100%;
     position: absolute;
     top: 0px;
     left: 0px;

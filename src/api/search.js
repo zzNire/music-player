@@ -14,9 +14,13 @@ export function getHotkey() {
     needNewCode: 1,
 
   });
-  return jsonp(url, data, options);
-
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  });
 };
+
 
 export function search(searchWord,page,zhida,perpage) {
   //const url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
