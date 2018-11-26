@@ -5,92 +5,12 @@
 const path = require('path')
 
 module.exports = {
-  dev: {
-
-    // Paths
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
-    proxyTable: {     //使用ProxyTable反向代理
-      '/api/getDiscList': {
-        target: 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
-        bypass: function (req, res, proxyOptions) {
-          req.headers.referer = 'https://c.y.qq.com';
-          req.headers.host = 'c.y.qq.com';
-          
-        },
-        pathRewrite: {
-          '^/api/getDiscList': ''
-        }
-      },
-      '/api/getSinger':{
-        target: 'https://c.y.qq.com/v8/fcg-bin/v8.fcg',
-        changeOrigin: true,
-        secure: false,
-        /*bypass: function (req, res, proxyOptions) {
-          req.headers.referer = 'https://c.y.qq.com';
-          req.headers.host = 'c.y.qq.com';
-        },*/
-        pathRewrite: {
-          '^/api/getSinger': ''
-        }
-      },
-      '/api/getSingerDetial':{
-        trager:'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg',
-        changeOrigin: true,
-        secure: false,
-        pathRewrite: {
-          '^/api/getSingerDetial': ''
-        }
-      },
-      '/api/getVkey':{
-        trager:'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg',
-        changeOrigin: true,
-        secure: false,
-        pathRewrite: {
-          '^/api/getVkey': ''
-        }
-      },
-     /* '/api/lyric':{
-        trager:'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg',
-        bypass: function (req, res, proxyOptions) {
-          req.headers.referer = 'https://y.qq.com/portal/player.html',//'https://c.y.qq.com';
-          req.headers.host = 'c.y.qq.com';
-        },
-      
-        pathRewrite: {
-          '^/api/lyric': ''
-        }
-      }*/
-    },
-
-    // Various Dev Server settings
-    host: 'localhost', // can be overwritten by process.env.HOST
-    port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
-    autoOpenBrowser: false,
-    errorOverlay: true,
-    notifyOnErrors: true,
-    poll: false, // https://webpack.js.org/configuration/dev-server/#devserver-watchoptions-
-
-    
-    /**
-     * Source Maps
-     */
-
-    // https://webpack.js.org/configuration/devtool/#development
-    devtool: 'cheap-module-eval-source-map',
-
-    // If you have problems debugging vue-files in devtools,
-    // set this to false - it *may* help
-    // https://vue-loader.vuejs.org/en/options.html#cachebusting
-    cacheBusting: true,
-
-    cssSourceMap: true
-  },
+  
 
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../dist/index.html'),
-
+    port:9000,
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
