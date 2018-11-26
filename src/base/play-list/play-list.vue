@@ -44,10 +44,10 @@
     <div class="footer" @click='closePlayList'>
       <p class="close-button">关闭</p>
     </div>
-    <!--<transition name="addsong">
+    <transition name="addsong">
       <add-song class="add-song" v-if="ifShowAddSong"
       @closeAddSong='closeAddSong'></add-song>
-    </transition>-->
+    </transition>
     
   </div>
 
@@ -183,12 +183,12 @@
       showAddSong(){
         this.ifShowAddSong = true;
         this.setSearchMode(true);
-         this.setShowContent('add-song');
+        // this.setShowContent('add-song');
       },
       closeAddSong(){
         this.ifShowAddSong = false;
         this.setSearchMode(false);
-         this.showContent('');
+        // this.showContent('');
       }
     },
     watch: {
