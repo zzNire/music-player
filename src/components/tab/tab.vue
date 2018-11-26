@@ -101,7 +101,10 @@
         });
         this.mySwiper.scrollbar.$el.css({
           'background': 'rgb(212,68,57)',
-          'height': '3px'
+          'height': '3px',
+          'width' : '100%',
+          'left' : 0, 
+
         });
         let drag = this.mySwiper.scrollbar.$dragEl;
         drag.css({
