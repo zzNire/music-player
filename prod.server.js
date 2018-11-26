@@ -110,8 +110,7 @@ app.use('/api', apiRoutes)
 // 静态目录
 app.use(express.static('./dist'))
 
-var port = process.env.PORT || config.build.port
-module.exports = app.listen(port, function (err) {
+module.exports = app.listen(9000, function (err) {
   if (err) {
     console.log(err)
     return
