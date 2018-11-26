@@ -27,6 +27,7 @@
   import Player from './components/player/player.vue'
   import Disc from './components/disc/disc.vue'
   import TopList from './components/toplist/toplist.vue'
+   import AddSong from './base/play-list/add-song.vue'
   import Confirm from './base/confirm/confirm.vue'
   import Vue from 'vue'
   import Bus from './commom/js/bus.js'
@@ -44,6 +45,7 @@
       Disc,
       TopList,
       Confirm,
+      AddSong
     },
     data() {
       return {
@@ -58,7 +60,12 @@
         {
           name:'top-lisy',
           component:TopList,
-        }],
+        },
+        {
+          name :'add-song',
+          component :AddSong,
+        }
+        ],
        
       }
     },

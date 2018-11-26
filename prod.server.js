@@ -103,7 +103,7 @@ app.get('/api/singer',function(req,res){
   })
 
 });
-/*app.get('/api/hotKey',function(req,res){
+app.get('/api/hotKey',function(req,res){
   const url = 'https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg';
   axios.get(url,{
     headers: {
@@ -124,7 +124,7 @@ app.get('/api/singer',function(req,res){
     console.log(e);
   })
 
-});*/
+});
 app.get('/api/search', function (req, res) {
   var url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
 

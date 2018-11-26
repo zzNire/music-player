@@ -228,7 +228,7 @@
   .recommend-item {
     position: relative;
     display: inline-block;
-    width: 33.33%;
+    width: 33%;
     padding:0 2px;
     overflow: hidden;
     text-overflow: ellipsis;

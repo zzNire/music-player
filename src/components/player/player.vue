@@ -1,7 +1,7 @@
 <template>
   <div class="player">
   
-    <transition name='maxplayer' @enter='enter' @after-enter='afterEnter' @leave='leave' @after-leave='afterLeave'>
+    <transition name='maxplayer'><!-- @enter='enter' @after-enter='afterEnter' @leave='leave' @after-leave='afterLeave'>-->
     
       <div class='max-player' v-show="fullScreen" v-if="currentSong">
         <div class="bk-image" :style="{

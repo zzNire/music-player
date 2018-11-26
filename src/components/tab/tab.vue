@@ -99,6 +99,8 @@
           },
 
         });
+        let width = window.innerWidth;
+        let perWidth = (width/3 - 75)/2;
         this.mySwiper.scrollbar.$el.css({
           'background': 'rgb(212,68,57)',
           'height': '3px',
@@ -112,12 +114,13 @@
           'height': '3px',
 
         });
+
         drag.css({
           'border-radius': '0',
           'box-sizing': 'border-box',
           //假装缩短滚动条 其实长度未变 只是将左右边框设为白色 
-          'border-left': 'solid rgb(212,68,57) 25px',
-          'border-right': 'solid rgb(212,68,57) 25px',
+          'border-left': `solid rgb(212,68,57) ${perWidth}px`,
+          'border-right':`solid rgb(212,68,57) ${perWidth}px`,
 
 
         });
