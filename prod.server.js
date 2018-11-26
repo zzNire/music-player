@@ -109,8 +109,8 @@ app.get('/api/search', function (req, res) {
 app.use('/api', apiRoutes)
 // 静态目录
 app.use(express.static('./dist'))
-
-module.exports = app.listen(9000, function (err) {
+let port = 9000; 
+module.exports = app.listen(port, function (err) {
   if (err) {
     console.log(err)
     return
