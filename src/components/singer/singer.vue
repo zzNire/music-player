@@ -18,6 +18,7 @@ import Listview from "../../base/listview/listview.vue";
 import singerDetial from "../../components/singer-detial/singer-detial.vue";
 import { getSinger } from "../../api/singer.js";
 import {mapMutations} from 'vuex'
+import Pinyin from '../../commom/js/ChinesePY.js'
 
 export default {
   components: {
@@ -40,8 +41,8 @@ export default {
       getSinger().then(res => {
         if (res.code === ERR_OK) {
           console.log("singer");
-          console.log(res.data);
-          this.singers = res.data.list;
+          console.log(res.singerList);
+          this.singers = res.singerList.data.singerlist;
           //console.log(this.recommends.slider.length);
           this._normalizeSinger(this.singers);
          
@@ -58,9 +59,10 @@ export default {
       list.forEach((element, index) => {
         if (index < HOT_SINGER_LENGTH) {
           map.hot.items.push(
-            new Singer(element.Fsinger_mid, element.Fsinger_name)
+            new Singer(element.singer_mid, element.singer_name)
           );
         }
+        element.Findex = Pinyin.GetJP(element.singer_name.substr(0, 1));
         let key = element.Findex;
         if (!map[key]) {
           map[key] = {
@@ -69,7 +71,7 @@ export default {
           };
         }
         map[key].items.push(
-          new Singer(element.Fsinger_mid, element.Fsinger_name)
+          new Singer(element.singer_mid, element.singer_name)
         );
       });
       console.log(map);
