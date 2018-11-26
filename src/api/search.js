@@ -8,17 +8,23 @@ import axios from 'axios'
 
 export function getHotkey() {
   const url = 'https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg';
-  //const url = '/api/topList';
+  //const url = '/api/hotKey';
   const data = Object.assign({}, commonParam, {
+    g_tk: 818085859,
+    uin: 0,
+    inCharset: 'utf-8',
+    outCharset: 'utf-8',
+    notice: 0,
     platform: 'h5',
-    needNewCode: 1,
+    needNewCode: 1
 
   });
-  return axios.get(url, {
+ /* return axios.get(url, {
     params: data
   }).then((res) => {
     return Promise.resolve(res.data)
-  });
+  });*/
+  return jsonp(url, data, options);
 };
 
 

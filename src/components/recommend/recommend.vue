@@ -86,7 +86,7 @@
     },
     created() {
       this._getRecommend();
-      this._getDescList();
+    //  this._getDescList();
     },
     mounted(){
       

@@ -80,7 +80,51 @@ app.get('/api/disc', function (req, res) {
     console.log(e)
   })
 }),
+app.get('/api/singer',function(req,res){
+  const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
+  axios.get(url,{
+    headers: {
+      referer: 'https://u.y.qq.com/',
+      host: 'u.y.qq.com'
+    },
+    params: req.query
+  }).then((response)=>{
+    var ret = response.data
+    if (typeof ret === 'string') {
+      var reg = /^\w+\(({[^()]+})\)$/
+      var matches = ret.match(reg)
+      if (matches) {
+        ret = JSON.parse(matches[1])
+      }
+    }
+    res.json(ret)
+  }).catch((e)=>{
+    console.log(e);
+  })
 
+});
+/*app.get('/api/hotKey',function(req,res){
+  const url = 'https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg';
+  axios.get(url,{
+    headers: {
+    
+    },
+    params: req.query
+  }).then((response)=>{
+    var ret = response.data
+    if (typeof ret === 'string') {
+      var reg = /^\w+\(({[^()]+})\)$/
+      var matches = ret.match(reg)
+      if (matches) {
+        ret = JSON.parse(matches[1])
+      }
+    }
+    res.json(ret)
+  }).catch((e)=>{
+    console.log(e);
+  })
+
+});*/
 app.get('/api/search', function (req, res) {
   var url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
 

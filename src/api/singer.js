@@ -7,7 +7,8 @@ import {
 import axios from 'axios'
 
 export function getSinger() {
-  const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+ // const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg'
+ const url = '/api/singer';
   const obj = {
     comm: {
       ct: 24,
@@ -37,6 +38,12 @@ export function getSinger() {
   })
   // 已经在data中传入callback,若在传入options,则jsonp会再附加一个jsonpCallback???错误的想法!!!
   // return jsonp(url, data)
+ return axios.get(url,{
+   params :data
+ }).then((res)=>{
+   return Promise.resolve(res.data);
+ }
+ )
   return jsonp(url, data, {
     param: 'callback'
   })
