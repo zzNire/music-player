@@ -1,56 +1,59 @@
 <template>
   <div class="recommend-content">
-    <scroll class='recommend-scroll' :data="recommends.songList" :probe-type="3"
-    @changeLocation='changeXY'
-    @isAllowSwipe="isAllowSwiper"
-    ref="scroll">
-      <div class = "scroll-content">
-        
+    <scroll class='recommend-scroll' :data="recommends.songList" :probe-type="3" @changeLocation='changeXY' @isAllowSwipe="isAllowSwiper" ref="scroll">
+      <div class="scroll-content">
+  
         <div class="recommend">
-          <div v-if="recommends.slider.length" class="swiper-contianer" >
+          <div v-if="recommends.slider.length" class="swiper-contianer">
             <div class="background-block" ref="backBlock"></div>
-            <slider class="slider" ref="slider" >
+            <slider class="slider" ref="slider">
               <div class="slider-div" v-for="recommend in recommends.slider">
                 <a class="slider-a" :href="recommend.linkUrl">
-                  <img  @load="loadImage" class="slider-img" :src="recommend.picUrl">
+                  <img @load="loadImage" class="slider-img" :src="recommend.picUrl">
                 </a>
               </div>
             </slider>
           </div>
           <div class="recommend-song">
             <p class="recommend-title">推荐歌单 ></p>
-            <div class="recommend-item" v-for="item in recommends.songList" @click="selectDisc(item)">
-              <a class="recommend-a">
-                <div class="img-div">
-                  <img class="icon" v-lazy="item.picUrl">
-                </div>
-                <p class="name" v-html="item.songListDesc">{{item.songListDesc}}</p>
-
-                <p class="play-num"><i class="icon-play-mini"></i>{{item.accessnum |translateNum}}</p>
-              </a>
-            </div>
+            <ul>
+              <li class="recommend-item" v-for="item in recommends.songList" @click="selectDisc(item)">
+                <a class="recommend-a">
+                  <div class="img-div">
+                    <img class="icon" v-lazy="item.picUrl">
+                  </div>
+                  <p class="name" v-html="item.songListDesc">{{item.songListDesc}}</p>
+  
+                  <p class="play-num"><i class="icon-play-mini"></i>{{item.accessnum |translateNum}}</p>
+                </a>
+              </li>
+            </ul>
+  
           </div>
-          <div class="recommend-song">
-            <p class="recommend-title">最新音乐 ></p>
-            <div class="recommend-item" v-for="item in recommends.songList" @click="selectDisc(item)">
-              <a class="recommend-a">
-                <div class="img-div">
-                  <img class="icon" v-lazy="item.picUrl" >
-                </div>
-                <p class="name" v-html="item.songListDesc">{{item.songListDesc}}</p>
-
-                <p class="play-num"><i class="icon-play-mini"></i>{{item.accessnum |translateNum}}</p>
-              </a>
-            </div>
+           <div class="recommend-song">
+            <p class="recommend-title">推荐歌单 ></p>
+            <ul>
+              <li class="recommend-item" v-for="item in recommends.songList" @click="selectDisc(item)">
+                <a class="recommend-a">
+                  <div class="img-div">
+                    <img class="icon" v-lazy="item.picUrl">
+                  </div>
+                  <p class="name" v-html="item.songListDesc">{{item.songListDesc}}</p>
+  
+                  <p class="play-num"><i class="icon-play-mini"></i>{{item.accessnum |translateNum}}</p>
+                </a>
+              </li>
+            </ul>
+  
           </div>
-          
+  
         </div>
       </div>
       <div class="loading-contain" v-show="!recommends.slider.length">
         <my-loading class="loading"></my-loading>
       </div>
     </scroll>
-    
+  
   </div>
 </template>
 
@@ -61,39 +64,41 @@
     getRecommend,
     getDiscList
   } from '../../api/recommend.js'
-  import {mapMutations} from 'vuex'
+  import {
+    mapMutations
+  } from 'vuex'
   import Slider from '../../base/slider/slider.vue'
   import Scroll from '../../base/scroll/scroll.vue'
   import myLoading from '../../base/loading/loading.vue'
- 
-
+  
+  
   export default {
     components: {
       Slider,
       Scroll,
       myLoading,
-     
+  
     },
     data() {
       return {
         recommends: {
           slider: [],
-          allowSwiper:true,
-          
+          allowSwiper: true,
+  
         },
-        showSonglist:false,
+        showSonglist: false,
       }
     },
     created() {
       this._getRecommend();
-    //  this._getDescList();
+      //  this._getDescList();
     },
-    mounted(){
-      
-      
+    mounted() {
+  
+  
     },
     methods: {
-      
+  
       _getRecommend() {
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
@@ -103,46 +108,45 @@
           }
         });
       },
-      _getDescList() { 
+      _getDescList() {
         console.log('getDiscList');
         getDiscList().then((res) => {
-          
+  
           console.log(res);
         });
       },
-      changeXY(pos){
-          if(pos.y>=0)
-          return ;
-          //console.log(this.$refs.backBlock.offsetHeight);
-          let top = -Math.floor(this.$refs.backBlock.offsetHeight * 1.25/2);
-         // console.log(this.$refs.backBlock);
-          //console.log('offset'+top);
-          top = top + Math.floor(pos.y);
-          this.$refs.backBlock.style.top = top + 'px';
-          //console.log('change Y to' + this.$refs.backBlock.offsetTop);
+      changeXY(pos) {
+        if (pos.y >= 0)
+          return;
+        //console.log(this.$refs.backBlock.offsetHeight);
+        let top = -Math.floor(this.$refs.backBlock.offsetHeight * 1.25 / 2);
+        // console.log(this.$refs.backBlock);
+        //console.log('offset'+top);
+        top = top + Math.floor(pos.y);
+        this.$refs.backBlock.style.top = top + 'px';
+        //console.log('change Y to' + this.$refs.backBlock.offsetTop);
       },
-      isAllowSwiper(isAllow){
-        this.$emit('tabIsSwiper',isAllow);
+      isAllowSwiper(isAllow) {
+        this.$emit('tabIsSwiper', isAllow);
       },
-      loadImage(){
-        if(!this.checkLoaded)
-        {
+      loadImage() {
+        if (!this.checkLoaded) {
           this.$refs.scroll.refresh();
           this.checkLoaded = true;
         }
-        
+  
       },
-      selectDisc(item){
+      selectDisc(item) {
         this.setDisc(item);
         this.setContentName('disc');
         this.$router.push(`/recommend/${item.id}`);
         this.showSonglist = true;
       },
       ...mapMutations({
-        setDisc:'SET_DISC',
-        setContentName:'SHOW_CONTENT',
+        setDisc: 'SET_DISC',
+        setContentName: 'SHOW_CONTENT',
       }),
-
+  
     },
     filters: {
       translateNum(value) {
@@ -157,7 +161,6 @@
       },
     }
   }
-
 </script>
 
 
@@ -228,7 +231,7 @@
   .recommend-item {
     position: relative;
     display: inline-block;
-    width: 33%;
+    width: 33.33%;
     padding:0 2px;
     overflow: hidden;
     text-overflow: ellipsis;
