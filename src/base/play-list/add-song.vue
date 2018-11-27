@@ -202,12 +202,13 @@ import { setTimeout } from 'timers';
 .result-content{
     width:100%;
    
-    padding :0 20px;
+    padding-left:20px;
     
     position :fixed;
     bottom:0px;
     top:142px;
     background-color :white;
+    box-sizing :border-box; 
    
     }
 .scroll{

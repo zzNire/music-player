@@ -95,19 +95,19 @@ export default {
     text-align :left;
     flex :1;
     border-bottom :1px solid rgba(240,240,240,1);
-     overflow :hidden;
-     text-overflow :ellipsis;
+    overflow :hidden;
+    text-overflow :ellipsis;
 }
 .song-name{  
     box-sizing :border-box;
     width:100%;
-    margin-bottom :7px; 
+    margin-bottom :3px; 
     font-size :16px;
     white-space :nowrap;
     padding-right:10px;
      overflow :hidden;
      text-overflow :ellipsis;
-     line-height :16px;
+     line-height :18px;
 
 
 }
@@ -120,7 +120,7 @@ export default {
     padding-right:10px;
      overflow :hidden;
      text-overflow :ellipsis;
-     line-height :12px;
+     line-height :14px;
      
 }
 

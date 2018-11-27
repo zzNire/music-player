@@ -174,10 +174,11 @@
       startSearch(){  //开始搜索
        
         if (this.searchText) {
-          console.log("watch searchtext");
+          console.log("watch searchtext"); 
+          this.saveSearch(this.searchText);
           this.setP(1); //初始化当前页 
           this.search();
-          this.saveSearch(this.searchText);
+         
 
         }
        // if (!text) this.setSearchResult([]);
@@ -211,7 +212,7 @@
         this.showSearchCommond = false;
         console.log('change');
         this.searchText = text;
-        this.search();
+        this.startSearch();
        // this.searchText = "";
         this.$refs.searchBox.setSearchBox(text);
 
@@ -266,6 +267,7 @@
         }
       },
       saveSearch(text) { //保存搜索历史
+      console.log(text);
         this.saveSearchHistory(text);
       },
       searchTransition() {

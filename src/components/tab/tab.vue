@@ -119,8 +119,7 @@
           'border-radius': '0',
           'box-sizing': 'border-box',
           //假装缩短滚动条 其实长度未变 只是将左右边框设为白色 
-          'border-left': `solid rgb(212,68,57) ${perWidth}px`,
-          'border-right':`solid rgb(212,68,57) ${perWidth}px`,
+         
 
 
         });
