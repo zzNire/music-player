@@ -74,7 +74,7 @@ export function clearSearch(){
 }
 
 export function deleteSearchItem(text){
-    let searches = initSong(storage.get(SEARCH_KEY,[]));
+    let searches = storage.get(SEARCH_KEY,[]);
     deleteItem(searches,(item)=>{
        return item === text;
     })

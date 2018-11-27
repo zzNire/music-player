@@ -2,7 +2,7 @@
   <div class='history-list' v-if="searchHistory.length!==0" >
     <p class="history-title" v-if="showTitle">搜索历史</p>
     <i class='icon-clear' @click.stop="clearAllSearchHisory" v-if="showTitle"></i>
-    <transition-group name="list" tag="ul"class="history-ul">
+    <transition-group name="list" tag="ul" class="history-ul">
     
       <li class='history-li' v-for="(history,index) in searchHistory" :key="history"
       @click="selectItem(index)">
