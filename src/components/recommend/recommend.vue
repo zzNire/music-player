@@ -32,8 +32,8 @@
           </div>
            <div class="recommend-song">
             <p class="recommend-title">推荐歌单 ></p>
-            <ul>
-              <li class="recommend-item" v-for="item in recommends.songList" @click="selectDisc(item)">
+            <div class="recommend-flex">
+              <div class="recommend-item" v-for="item in recommends.songList" @click="selectDisc(item)">
                 <a class="recommend-a">
                   <div class="img-div">
                     <img class="icon" v-lazy="item.picUrl">
@@ -42,8 +42,8 @@
   
                   <p class="play-num"><i class="icon-play-mini"></i>{{item.accessnum |translateNum}}</p>
                 </a>
-              </li>
-            </ul>
+              </div>
+            </div>
   
           </div>
   
