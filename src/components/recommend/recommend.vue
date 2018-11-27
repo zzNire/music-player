@@ -16,8 +16,8 @@
           </div>
           <div class="recommend-song">
             <p class="recommend-title">推荐歌单 ></p>
-            <ul>
-              <li class="recommend-item" v-for="item in recommends.songList" @click="selectDisc(item)">
+            <div class="recommend-flex">
+              <div class="recommend-item" v-for="item in recommends.songList" @click="selectDisc(item)">
                 <a class="recommend-a">
                   <div class="img-div">
                     <img class="icon" v-lazy="item.picUrl">
@@ -26,8 +26,8 @@
   
                   <p class="play-num"><i class="icon-play-mini"></i>{{item.accessnum |translateNum}}</p>
                 </a>
-              </li>
-            </ul>
+              </div>
+            </div>
   
           </div>
            <div class="recommend-song">
@@ -229,13 +229,16 @@
 
   }
 
-
+.recommend-flex{
+  display :flex;
+  flex-wrap:wrap;
+  justify-content:space-around;
+}
   .recommend-item {
+    flex:33% 0 0;
     position: relative;
-    display: inline-block;
-    width: 33.33%;
     padding:2px;
-    
+    padding-bottom :10px;
     box-sizing: border-box;
   
   }
