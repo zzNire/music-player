@@ -149,7 +149,7 @@
         this.ismaxSearchBox = true;
         this.$refs.searchBox.focus();
       },
-
+    
       cancleMaxSearch() {
         // this.$refs.left.style.display = 'block';
         //this.$refs.right.style.padding= 10+'px' ;

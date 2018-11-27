@@ -4,8 +4,8 @@
       <p class='title'>添加歌曲到列表</p>
       <p class="close" @click="closeAddSong">关闭</p>
     </div>
-    <div class='search-box-content' @click="maxSearch" ref="searchContent">
-      <search-box></search-box>
+    <div class='search-box-content' @click.stop="maxSearch" ref="searchContent">
+     <p>搜索歌手、歌曲</p>
     </div>
     <div class="content">
       <div class="tab">
@@ -88,6 +88,7 @@ import { setTimeout } from 'timers';
           this.ifMaxSearchBox = true;
           this.$refs.myheader.maxSearchBox();
           this.$refs.myheader.searchTransition();
+         
           //this.$refs.searchContent.style[transform] = 'translateY(-100%)';
       },
       closeSearchBox(){
@@ -150,10 +151,19 @@ import { setTimeout } from 'timers';
   }
 
   .search-box-content {
+   
+    font-size:13px;
+   
     background-color: white;
     margin:10px;
   }
 
+.search-box-content p{
+  padding:5px 0;
+   margin:0 5px; 
+   width:100%;
+   padding-left :10px;
+}
   .content {
     background-color: white;
     height:100%;

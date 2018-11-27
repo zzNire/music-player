@@ -1,6 +1,6 @@
 <template>
   <div class='search-box'>
-    <input class='box' :placeholder="placeholder" v-model="searchText" ref="input"
+    <input type="text" class='box' :placeholder="placeholder" v-model="searchText" ref="searchbox"
     :style="{color:color,fontSize:fontSize}"
     @focus="clearResult">
     <i class='icon-search'></i>
@@ -14,6 +14,7 @@
 <script>
 import {mapMutations} from 'vuex'
 import {debounce} from '../../commom/js/utils.js'
+import { setTimeout } from 'timers';
   export default {
     props: {
       placeholder: {
@@ -49,13 +50,17 @@ import {debounce} from '../../commom/js/utils.js'
             this.$emit("searchboxClear");
         },
         focus(){
-            this.$refs.input.focus();
+          this.$nextTick(()=>{
+             this.$refs.searchbox.focus();
+            console.log('searchbox focus');
+          })
+           
         },
         setSearchText(text){
             this.searchText = text;
         },
         unfocus(){
-          this.$refs.input.blur();
+          this.$refs.searchbox.blur();
         },
         setSearchBox(text){
           this.searchText = text;
