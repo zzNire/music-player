@@ -51,10 +51,10 @@ import { setTimeout } from 'timers';
         },
         focus(){
           this.$nextTick(()=>{
-             this.$refs.searchbox.focus();
-            console.log('searchbox focus');
+              this.$refs.searchbox.focus();
+              console.log('searchbox focus');
           })
-           
+          
         },
         setSearchText(text){
             this.searchText = text;
