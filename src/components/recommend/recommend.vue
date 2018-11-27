@@ -213,6 +213,7 @@
 
   .slider-div {
     padding: 0 10px;
+   
 
   }
 
@@ -233,14 +234,19 @@
     position: relative;
     display: inline-block;
     width: 33.33%;
-    padding:0 2px;
+    padding:2px;
     overflow: hidden;
     text-overflow: ellipsis;
     box-sizing: border-box;
+    padding-bottom :10px
   }
 
 
-  .recommend-a {}
+  .recommend-a {
+    width :100%;
+    height :100%;
+    display :inline-block;
+  }
 
   .img-div {
     padding-bottom: 100%;
@@ -274,7 +280,7 @@
     letter-spacing: 1px;
     padding-left: 3px;
     height: 30px;
-    margin-bottom: 15px;
+
   }
 
   .icon-play-mini {

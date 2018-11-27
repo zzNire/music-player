@@ -107,6 +107,7 @@ export default {
     padding-right:10px;
      overflow :hidden;
      text-overflow :ellipsis;
+     line-height :16px;
 
 
 }
@@ -119,6 +120,7 @@ export default {
     padding-right:10px;
      overflow :hidden;
      text-overflow :ellipsis;
+     line-height :12px;
      
 }
 

@@ -44,10 +44,7 @@
     <div class="footer" @click='closePlayList'>
       <p class="close-button">关闭</p>
     </div>
-    <transition name="addsong">
-      <add-song class="add-song" v-if="ifShowAddSong"
-      @closeAddSong='closeAddSong'></add-song>
-    </transition>
+    
     
   </div>
 
@@ -181,15 +178,12 @@
         
       },
       showAddSong(){
-        this.ifShowAddSong = true;
-        this.setSearchMode(true);
+       // this.ifShowAddSong = true;
+      //  this.setSearchMode(true);
         // this.setShowContent('add-song');
+        this.$emit('showAddSong');
       },
-      closeAddSong(){
-        this.ifShowAddSong = false;
-        this.setSearchMode(false);
-        // this.showContent('');
-      }
+     
     },
     watch: {
       rightIndex(newIndex,oldIndex) {
@@ -223,9 +217,8 @@
   }
 
   .play-list {
-    position: fixed;
-    bottom: 0;
-    top: 30%;
+    
+    
     width: 100%;
     overflow: hidden;
 
@@ -396,12 +389,7 @@
   }
 
 
-  .add-song{
-    width :100%;
-    position :fixed;
-    top:0;
-    bottom :0;
-  }
+  
 
   .addsong-enter, .addsong-leave-to{
     transform :translateY(100%);

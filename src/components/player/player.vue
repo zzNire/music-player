@@ -127,13 +127,23 @@
       <play-list class='playlist' v-else key='playlist'
       :seq-list="sequenceList" :mode="mode" :right-index="rightIndex"
       @changeMode = 'changeMode'
-    
-      @closePlayList='closePlaylist'></play-list>
+
+      @closePlayList='closePlaylist'
+      @showAddSong='showAddSong'></play-list>
   </transition>
+
+
+    <transition name="addsong">
+      <add-song class="add-song" v-if="ifShowAddSong"
+      @closeAddSong='closeAddSong'
+    ></add-song>
+    </transition>
+
   <transition name='background'>
     <div class="playlist-back" v-show='ifShowBK' ref="playlistBack"
     @click.stop='closePlaylist'></div>
   </transition>
+
    </div>
     <audio ref="audio" v-if="currentSong" :src="currentSong.url" @canplay="ready" 
     @error="error" 
@@ -160,6 +170,7 @@
   import ProgressCircle from '../../base/progress-circle/progress-circle.vue'
   import LyricComponent from '../../base/lyric/lyric.vue'
   import PlayList from '../../base/play-list/play-list.vue'
+    import AddSong from '../../base/play-list/add-song.vue'
   import {getLyric} from '../../api/song.js'
   import {playListMixin} from '../../commom/js/mixin.js'
 import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
@@ -174,6 +185,7 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
       ProgressCircle,
       LyricComponent,
       PlayList,
+      AddSong,
     },
     data() {
       return {
@@ -186,6 +198,7 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
         rightLyricTxt:'',
         ifShowPlayList:false,
         ifShowBK:false,
+        ifShowAddSong:false,
       }
     },
     created(){
@@ -253,7 +266,8 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
         setPlaying: 'SET_PLAYING',
         setIndex: 'SET_CURRENT_INDEX',
         setMode:'SET_MODE',
-        setPlayList:'SET_PLAY_LIST'
+        setPlayList:'SET_PLAY_LIST',
+        setSearchMode :'SET_SEARCHMODE',
       }),
       enter(el, done) {
         const {
@@ -537,8 +551,21 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
       closePlaylist(){
         this.ifShowPlayList = false;
         this.ifShowBK = false;
-      }
+      },
+
+      closeAddSong(){
+        this.ifShowAddSong = false;
+        this.setSearchMode(false);
+        // this.showContent('');
+      },
+
+      showAddSong(){
+        this.ifShowAddSong = true;
+        this.setSearchMode(true);
+        // this.setShowContent('add-song');
+      },
       
+    
     },
     filters:{
       timeFilter(rightTime){
@@ -1111,7 +1138,9 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
 }
 
 .playlist{
-
+  position:fixed;
+  top:30%;
+  bottom:0;
 
 }
 
@@ -1155,5 +1184,19 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
       transform: rotate(360deg);
     }
   }
+
+  .add-song{
+    width :100%;
+    position :fixed;
+    top:0;
+    bottom :0;
+  }
+
+      .addsong-enter, .addsong-leave-to{
+    transform :translateY(100%);
+    }
+  .addsong-enter-active , .addsong-leave-active{
+    transition :all 0.3s;
+    }
 
 </style>

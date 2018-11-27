@@ -27,6 +27,9 @@
         ></my-header>
     </div>
     </transition>
+
+
+
     <transition name="alert">
     <alert  class="alert-component"  :title="'1首已添加到播放列表'" v-if="showAlert"></alert>
     </transition>
@@ -62,6 +65,7 @@ import { setTimeout } from 'timers';
         rightTab: 0,
         ifMaxSearchBox:false,
         showAlert:false,
+     
       }
     },
     created(){
@@ -106,7 +110,9 @@ import { setTimeout } from 'timers';
                 this.showAlert = false;
             },1000);
           }
-      }
+      },
+
+       
     }
   }
 
@@ -117,7 +123,8 @@ import { setTimeout } from 'timers';
   @import '../../commom/stylus/variable.styl';
 
   .addsong-content {
-
+    height :100%;
+    width:100%;
     background-color: rgb(245, 245, 245);
    
   }
@@ -185,11 +192,12 @@ import { setTimeout } from 'timers';
 .result-content{
     width:100%;
    
-    margin :0 20px;
+    padding :0 20px;
     
     position :fixed;
     bottom:0px;
     top:142px;
+    background-color :white;
    
     }
 .scroll{
@@ -222,4 +230,6 @@ import { setTimeout } from 'timers';
  .alert-enter-active, .alert-leave-active{
      transition :all 0.5s;
      }        
+
+
 </style>
