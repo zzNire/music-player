@@ -235,10 +235,9 @@
     display: inline-block;
     width: 33.33%;
     padding:2px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    
     box-sizing: border-box;
-    padding-bottom :10px
+  
   }
 
 
