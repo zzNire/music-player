@@ -92,6 +92,7 @@
     created() {
       this._getRecommend();
       //  this._getDescList();
+     
     },
     mounted() {
   

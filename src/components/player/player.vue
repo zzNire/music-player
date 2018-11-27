@@ -1,5 +1,5 @@
 <template>
-  <div class="player">
+  <div class="player" @touchstart.once = 'touchPlayMusic'>
   
     <transition name='maxplayer'><!-- @enter='enter' @after-enter='afterEnter' @leave='leave' @after-leave='afterLeave'>-->
     
@@ -190,12 +190,14 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
     },
     created(){
       this.touch = {};
+     
       
     },
     mounted(){
       let height = window.innerHeight ;
       console.log(this.$refs.playlistBack);
       this.$refs.playlistBack.style.height = height + 'px';
+     // window.addEventListener("touchstart",this.touchPlayMusic,false);
     },
     computed: {
       ...mapGetters([
@@ -226,6 +228,14 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
     },
 
     methods: {
+      touchPlayMusic(){
+      
+       this.$refs.audio.load();
+       console.log("touchstart");
+        this.$refs.audio.play();
+     // window.removeEventListener("touchstart",this.touchPlayMusic,false);
+
+      },
       ...mapActions([
         'storePlayHistory',
       ]),
