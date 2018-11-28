@@ -66,9 +66,24 @@ url:https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg
 通过SetTimeout实现轮播，为了循环播放，需要将组件宽度设置为两倍的单个图片大小
 
 ## 歌单
-通过每个块设置为inline-block，设置宽度为33.33%来保证一行只有三个
+通过flex实现
+
 
 通过如下设置来保存标题只有两行，多出来的显示省略号
+```
+.recommend-flex{
+  display :flex;  
+  flex-wrap:wrap; 
+  justify-content:space-around;
+}
+```
+flex-wrap :是否换行
+justify-content ： 两端对齐
+
+```
+flex:33% 0 0;
+```
+设置每一个宽度
 
 父组件
 ```
