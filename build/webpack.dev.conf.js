@@ -84,15 +84,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
         })
       }),
 
-      app.get('/api/disc', function (req, res) {
+      app.get('/api/disc', function (req, res) { //req 请求 res 响应
         var url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
 
         axios.get(url, {
-          headers: {
+          headers: { //`headers` 是即将被发送的自定义请求头 
             referer: 'https://c.y.qq.com/',
             host: 'c.y.qq.com'
           },
-          params: req.query
+          params: req.query //`params` 是即将与请求一起发送的 URL 参数
         }).then((response) => {
           var ret = response.data
           if (typeof ret === 'string') {
