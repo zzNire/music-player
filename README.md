@@ -41,7 +41,7 @@ server{
 ```
 ### 使用PM2运行后端代码
 PM2 start prod.server.js
-在127.0.0.1：900端口运行prod.server.js
+在127.0.0.1：9000 端口运行prod.server.js
 
 #数据请求
 ## 跨域
@@ -322,14 +322,55 @@ url: https://u.y.qq.com/cgi-bin/musicu.fcg
 * 左右滑动切换
   * touchsatrt  记录下起始位置 X，Y值  并置Ydirection为false表示进行左右滑动            e.touches[0].pageX pageY
   * touchmove  记录下X，Y方向上的偏移量 如果水平位移小于垂直方向 置Ydirection 为true 并开始移动
+    * 在移动的过程中，根据移动的百分比移动歌词部分，并修改透明度
   * touchend  实现自动补充位移量 补充动画时间 
+    * 判断移动的距离是否大于10%，是的话就补充位移，不是的话就回退
+
+### touch 事件
+
+#### Touch对象
+表示一个触摸点，其属性包括 位置 压力 
+```js
+    screenX: 511, 
+    screenY: 400,//触点相对于屏幕左边沿的Y坐标
+    clientX: 244.37899780273438, 
+    clientY: 189.3820037841797,//相对于可视区域
+    pageX: 244.37, 
+    pageY: 189.37,//相对于HTML文档顶部，当页面有滚动的时候与clientX=Y 不等
+    force: 1,//压力大小，是从0.0(没有压力)到1.0(最大压力)的浮点数
+    identifier: 1036403715,//一次触摸动作的唯一标识符
+    radiusX: 37.565673828125, //能够包围用户和触摸平面的接触面的最小椭圆的水平轴(X轴)半径
+    radiusY: 37.565673828125,
+    rotationAngle: 0,//它是这样一个角度值：由radiusX 和 radiusY 描述的正方向的椭圆，需要通过顺时针旋转这个角度值，才能最精确地覆盖住用户和触摸平面的接触面
+    target: {} // 此次触摸事件的目标element
+```
+#### TouchEvent对象
+一类描述手指在触摸平面（触摸屏、触摸板等）的状态变化的事件
+
+属性
+* touches 一个 TouchList对象，表示一组触点，包含了所有当前接触触摸平面的触点的 Touch 对象，无论它们的起始于哪个 element 上
+* targetTouches 触摸起始于当前事件的目标 element 上，并且仍然没有离开触摸平面的触点
+
+触摸事件类型
+* touchStart 当用户在触摸平面上放置了一个触点时触发
+* touchEnd 当一个触点被用户从触摸平面上移除（当用户将一个手指离开触摸平面）时触发
+* touchMove 当用户在触摸平面上移动触点时触发
 
 * 歌词
   * 使用的lyric-parser
 
+* 专辑封面旋转
+```css
+  .icon-rotate {
+    animation: rotate 20s linear infinite;
+  }
 
+  .icon-rotate-pause {
+    animation-play-state: paused;
+  }
+```
 ## audio ios 无法自动播放
-ios不允许在没有用户交互的情况下自动播放歌曲，所以通过一个Touch事件来播放歌曲。
+safari 不允许在没有用户交互的情况下自动播放歌曲，所以通过一个Touch事件来播放歌曲。
 我看了qq音乐的手机版页面，发现在点击歌曲进行播放时，播放器是直接出现在当前页面的，所以这个点击事件触发了当前页面audio的播放。
 网易云的手机页面在点开一首歌之后并没有直接播放，需要用户点击播放按钮。
 所以也解决这个问题，就需要重新考虑交互逻辑。

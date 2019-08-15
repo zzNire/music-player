@@ -2,9 +2,9 @@ var express= require('express')
 var config = require('./config/index')
 var axios = require('axios')
 const app = express()
-var apiRoutes = express.Router()
+var apiRoutes = express.Router()// 使用 express.Router 类来创建可安装的模块化路由处理程序
 
-app.get('/api/getDiscList', function (req, res) {
+app.get('/api/getDiscList', function (req, res) {  //中间件
   // console.log(req.query)
   var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
   // https://c.y.qq.com/splcloud/fcgi-bin/fcg_musiclist_getmyfav.fcg
@@ -148,10 +148,13 @@ app.get('/api/search', function (req, res) {
   })
 });
 
+apiRoutes.get('/',(req,res)=>{
+  res.json('hello')
+})
 
-app.use('/api', apiRoutes)
-// 静态目录
-app.use(express.static('./dist'))
+app.use('/api', apiRoutes) //将路由器添加到一个特殊的根网址 这里是一个空的路由模块
+
+app.use(express.static('./dist')) // 静态目录
 let port = 9000; 
 module.exports = app.listen(port, function (err) {
   if (err) {
@@ -160,3 +163,4 @@ module.exports = app.listen(port, function (err) {
   }
   console.log('Listening at http://localhost:' + port + '\n')
 })
+
