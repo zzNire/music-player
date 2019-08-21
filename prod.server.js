@@ -10,6 +10,7 @@ app.get('/api/getDiscList', function (req, res) {  //中间件
   // https://c.y.qq.com/splcloud/fcgi-bin/fcg_musiclist_getmyfav.fcg
   // 通过axios发送http请求
   // axios/axios: Promise based HTTP client for the browser and node.js https://github.com/axios/axios
+  console.log(req.headers);
   axios.get(url, {
     // `headers` are custom headers to be sent
     headers: {
@@ -34,6 +35,7 @@ app.get('/api/getDiscList', function (req, res) {  //中间件
 }),
 
 app.get('/api/lyric', function (req, res) {
+  console.log(req.headers);
   var url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
 
   axios.get(url, {
@@ -58,6 +60,7 @@ app.get('/api/lyric', function (req, res) {
 }),
 
 app.get('/api/disc', function (req, res) {
+  console.log(req.headers);
   var url = 'https://c.y.qq.com/qzone/fcg-bin/fcg_ucc_getcdinfo_byids_cp.fcg'
   axios.get(url, {
     headers: {
@@ -80,6 +83,7 @@ app.get('/api/disc', function (req, res) {
   })
 }),
 app.get('/api/singer',function(req,res){
+  console.log(req.headers);
   const url = 'https://u.y.qq.com/cgi-bin/musicu.fcg';
   axios.get(url,{
     headers: {
@@ -103,6 +107,7 @@ app.get('/api/singer',function(req,res){
 
 });
 app.get('/api/hotKey',function(req,res){
+  console.log(req.headers);
   const url = 'https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg';
   axios.get(url,{
     headers: {
@@ -125,6 +130,7 @@ app.get('/api/hotKey',function(req,res){
 
 });
 app.get('/api/search', function (req, res) {
+  console.log(req.headers);
   var url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
 
   axios.get(url, {
