@@ -136,6 +136,10 @@ app.get('/api/hotKey',function(req,res){
 });
 app.get('/api/search', function (req, res) {
   console.log(req.headers);
+  axios.get('localhost:8000/search').then(data=>{
+    res.json(data);
+  })
+  /*
   var url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
 
   axios.get(url, {
@@ -157,7 +161,7 @@ app.get('/api/search', function (req, res) {
     console.log(res.headers);
   }).catch((e) => {
     console.log(e)
-  })
+  })*/
 });
 
 apiRoutes.get('/',(req,res)=>{
