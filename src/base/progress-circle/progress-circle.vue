@@ -40,7 +40,6 @@
  .progress-circle
     position: relative
     circle
-     
       transform-origin: center
       &.progress-bk
         transform: scale(0.8)

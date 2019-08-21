@@ -4,10 +4,11 @@
       <myheader class="myheader"></myheader>
       <tab class='tab'></tab>
     </div>
+
     <transition name="slideTo">
       <component :is="contentName" class="singer-content"></component>
-
     </transition>
+    
     <player class="player"></player>
     <transition name='confirm'>
     <confirm  class='confirm-component' v-if='showConfirm'

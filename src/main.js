@@ -17,7 +17,7 @@ Vue.use(lazyLoad,{
   loading :require('./commom/image/default.png')
 });
 /* eslint-disable no-new */
-new Vue({
+var vm = new Vue({
   el: '#app',
   router,
   store,

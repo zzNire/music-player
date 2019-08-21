@@ -133,10 +133,12 @@
   
     watch: {
       data() {
-        setTimeout(() => {
+       // setTimeout(() => {
+         this.$nextTick(()=>{
           this._calculateHeight();
           console.log(this.listHeight);
-        }, 20)
+       // }, 20)
+       })
       },
       scrollY(newY) {
         //console.log(newY);

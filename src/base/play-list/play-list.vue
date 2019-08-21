@@ -238,7 +238,7 @@
   }
 
   .header-icon {
-    flex: 20px 0 0;
+    flex: 0 0 20px;
     font-size: 20px;
     vertical-align: middle;
   }
@@ -315,7 +315,7 @@
 
   .list-icon {
     text-align: center;
-    flex: 45px 0 0;
+    flex: 0 0 45px;
   }
 
   .song-detail {

@@ -36,7 +36,7 @@ export default new Router({
       component:singer,
       children:[
         {
-          path:':id',
+          path:'singer-detial:id',
           name:'singerDetial',
           component:singerDetial,
         },

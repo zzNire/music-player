@@ -106,7 +106,7 @@ export default {
       this.setSinger(singer);
       console.log("singer-detial");
       this.$router.push({
-        path: `/singer/${singer.id}`
+        path: `singer/${singer.id}`
       });
     },
     

@@ -145,7 +145,8 @@
   </transition>
 
    </div>
-    <audio ref="audio" v-if="currentSong" :src="currentSong.url" @canplay="ready" 
+    <audio ref="audio" v-if="currentSong" :src="currentSong.url" 
+    @canplay="ready" 
     @error="error" 
     @timeupdate='setCurrentTIme'
     @ended='songEnded'></audio>
@@ -203,7 +204,7 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
     },
     created(){
       this.touch = {};
-     
+      debugger;
       
     },
     mounted(){
@@ -242,7 +243,7 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
 
     methods: {
       touchPlayMusic(){
-      
+        if(this.currentTime) { return }
        this.$refs.audio.load();
        console.log("touchstart");
         this.$refs.audio.play();
@@ -338,6 +339,7 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
         };
       },
       musicPlaying() {
+        debugger;
         this.setPlaying(!this.playing);
         
       },
@@ -392,10 +394,19 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
       error() {
         this.songReady = true;
       },
-      setCurrentTIme(e) {
-        this.currentTime = e.target.currentTime;
-        
-      },
+      setCurrentTIme:(function(){
+        var timer;
+        return function (e) {
+          if(timer){
+            return ;
+          }
+          timer = setTimeout(()=>{
+            this.currentTime = e.target.currentTime;
+            clearTimeout(timer);
+            timer = null;
+          },1000)
+        }
+      })() ,
       changerSongProgress(rightProgress){
         this.currentTime = rightProgress * this.songLength;
         this.$refs.audio.currentTime = this.currentTime;
@@ -596,15 +607,18 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
             this.currentLyric.stop();
             this.currentLyric = null;
         }
-        if(this.timer) clearTimeout(this.timer);
-        this.timer = setTimeout(() => {
-          this.$refs.audio.play();
-          this.getLyric();
+        //if(this.timer) clearTimeout(this.timer);
+        //this.timer = setTimeout(() => {
+          this.$nextTick(()=>{
+            this.$refs.audio.play();
+            this.getLyric();
+          })
         
-        },1000);
+       // },1000);
 
       },
       playing(newplaying) {
+        debugger;
         this.$nextTick(() => {
           const audio = this.$refs.audio;
           if(!audio) return ;

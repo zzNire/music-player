@@ -14,8 +14,7 @@
       <div class="swiper-wrapper">
         <div class="swiper-slide" v-for="(item, index) in componentList">
           <keep-alive>
-          
-          <component :is="item.component" @tabIsSwiper='tabIsSwiper'></component>
+            <component :is="item.component" @tabIsSwiper='tabIsSwiper'></component>
           </keep-alive>
         </div>
       </div>
@@ -78,18 +77,22 @@
       }
     },
     mounted() {
+      //路由
       let i;
       let path = this.$route.path.split('/');
       path = '/'+path[1];
       console.log("nowpath"+path);
-      this.$router.push(path);
+      this.$router.push(path);  
+
       for (i = 0; i < this.componentList.length; i++) {
 
         if (path === this.componentList[i].path)
           break;
       }
+
       this.nowIndex = i;
       if (!this.mySwiper) {
+        // 设置标签栏下的 横线
         this.mySwiper = new Swiper(".swiper-container", {
           initialSlide: path === '/recommend' ? 0 : path === '/rank' ? 1 : path ===
             '/singer' ? 2 : path === '/search' ? 3 : 0,

@@ -112,10 +112,10 @@
     },
     watch: {
       data() {
-        setTimeout(() => {
+       // setTimeout(() => {
           console.log('refresh');
           this.refresh();
-        }, 20);
+       // }, 20);
       }
     },
     mounted() {
