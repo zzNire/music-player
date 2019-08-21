@@ -136,8 +136,8 @@ app.get('/api/hotKey',function(req,res){
 });
 app.get('/api/search', function (req, res) {
   console.log(req.headers);
-  axios.get('localhost:8000/search').then(data=>{
-    res.json(data);
+  axios.get('http://localhost:8000/search').then(response=>{
+    res.json(response.data);
   })
   /*
   var url = 'https://c.y.qq.com/soso/fcgi-bin/search_for_qq_cp'
