@@ -29,6 +29,7 @@ app.get('/api/getDiscList', function (req, res) {  //中间件
     params: req.query
   }).then((response) => {
     res.json(response.data)
+    console.log(res.headers);
   }).catch((e) => {
     console.log(e)
   })
@@ -54,6 +55,7 @@ app.get('/api/lyric', function (req, res) {
       }
     }
     res.json(ret)
+    console.log(res.headers);
   }).catch((e) => {
     console.log(e)
   })
@@ -78,6 +80,7 @@ app.get('/api/disc', function (req, res) {
       }
     }
     res.json(ret)
+    console.log(res.headers);
   }).catch((e) => {
     console.log(e)
   })
@@ -101,6 +104,7 @@ app.get('/api/singer',function(req,res){
       }
     }
     res.json(ret)
+    console.log(res.headers);
   }).catch((e)=>{
     console.log(e);
   })
@@ -124,6 +128,7 @@ app.get('/api/hotKey',function(req,res){
       }
     }
     res.json(ret)
+    console.log(res.headers);
   }).catch((e)=>{
     console.log(e);
   })
@@ -149,6 +154,7 @@ app.get('/api/search', function (req, res) {
       }
     }
     res.json(ret)
+    console.log(res.headers);
   }).catch((e) => {
     console.log(e)
   })
