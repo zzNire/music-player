@@ -11,7 +11,6 @@ const state = {
     sequenceList:[],
     mode:playMode.swquence,
     currentIndex:-1,
-    mode:playMode.swquence,
     disc:{},
     toplist:{},
     showSearch:false,

@@ -1,8 +1,8 @@
 {
   "name": "music-player",
   "version": "1.0.0",
-  "description": "A Vue.js project",
-  "author": "vscode <710323364@qq.com>",
+  "description": "A Web Music Plauer project",
+  "author": "zzNire <https://github.com/zzNire>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
