@@ -70,7 +70,7 @@
   import Slider from '../../base/slider/slider.vue'
   import Scroll from '../../base/scroll/scroll.vue'
   import myLoading from '../../base/loading/loading.vue'
-  
+  import {filterRecoment} from '../../commom/js/recomentd'
   
   export default {
     components: {
@@ -104,7 +104,7 @@
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
             console.log(res.data);
-            this.recommends = res.data;
+            this.recommends = filterRecoment(res.data);
             console.log(this.recommends);
           }
         });
