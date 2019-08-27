@@ -70,7 +70,7 @@
   import Slider from '../../base/slider/slider.vue'
   import Scroll from '../../base/scroll/scroll.vue'
   import myLoading from '../../base/loading/loading.vue'
-  import {filterRecoment} from '../../commom/js/recomentd'
+  import {filterRecoment} from '../../commom/js/recommend'
   
   export default {
     components: {
