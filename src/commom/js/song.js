@@ -35,10 +35,10 @@ export default class Song {
   getMyLyric() {
     if (this.lyric) return Promise.resolve(this.lyric);
     return new Promise((resolve, reject) => {
-      getLyric(this.mid).then((res) => {
+      getLyric(this.id).then((res) => {
         console.log(res);
-        if (res.data.code === 0) {
-          this.lyric = Base64.decode(res.data.lyric);
+        if (res.status === 200) {
+          this.lyric = res.data;
           console.log(this.lyric);
         resolve(this.lyric);
         }
@@ -55,16 +55,18 @@ export function createSong(musicData) {
  //let vkey = getSongSource(musicData.songmid);
  //console.log(vkey);
   return new Song({
-    id: musicData.songid,
-    mid: musicData.songmid,
+    id: musicData.id,
+    mid: musicData.mvid,
     name: filterSinger(musicData.singer),
-    album: musicData.albumname,
-    duration: musicData.interval,
-    songname: musicData.songname,
-    singer: musicData.singer,
-    image: `//y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
-    //url:`http://121.51.2.70/amobile.music.tc.qq.com/${musicData.songmid}.m4a?guid=6974902429&vkey=`+vkey+`&uin=0&fromtag=66`,
-   url: `https://v1.itooi.cn/tencent/url?id=${musicData.songmid}&quality=128`,
+    album: musicData.album.name,
+    duration: musicData.duration,
+    songname: musicData.name,
+    singer: musicData.artists[0].name,
+    image:`https://v1.itooi.cn/netease/pic?id=${musicData.id}`,
+    // `//y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
+    url:`https://v1.itooi.cn/netease/url?id=${musicData.id}&quality=flac`,
+    //`http://121.51.2.70/amobile.music.tc.qq.com/${musicData.songmid}.m4a?guid=6974902429&vkey=`+vkey+`&uin=0&fromtag=66`,
+   //url: `https://v1.itooi.cn/tencent/url?id=${musicData.songmid}&quality=128`,
     //url: `http://ws.stream.qqmusic.qq.com/C100${musicData.songmid}.m4a?fromtag=0&guid=126548448`,
     //url:`http://isure.stream.qqmusic.qq.com/C400${musicData.songmid}.m4a?guid=6780662315&vkey=${vkey}&uin=0&fromtag=66`
     // 'http://isure.stream.qqmusic.qq.com/C400001Qu4I30eVFYb.m4a?guid=6780662315&vkey=B3C5B9D48E1179611FE99F3D01DA0C794649131083DD331C69475798919CB4E7DD311097732656FBE6E94DE9331D6B644B6B5FDC0CB3969F&uin=0&fromtag=66'

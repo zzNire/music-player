@@ -30,22 +30,7 @@
             </div>
   
           </div>
-           <div class="recommend-song">
-            <p class="recommend-title">推荐歌单 ></p>
-            <div class="recommend-flex">
-              <div class="recommend-item" v-for="item in recommends.songList" @click="selectDisc(item)">
-                <a class="recommend-a">
-                  <div class="img-div">
-                    <img class="icon" v-lazy="item.picUrl">
-                  </div>
-                  <p class="name" v-html="item.songListDesc">{{item.songListDesc}}</p>
-  
-                  <p class="play-num"><i class="icon-play-mini"></i>{{item.accessnum |translateNum}}</p>
-                </a>
-              </div>
-            </div>
-  
-          </div>
+
   
         </div>
       </div>
@@ -62,7 +47,8 @@
   const ERR_OK = 0;
   import {
     getRecommend,
-    getDiscList
+    getDiscList,
+    getRecommendSongList
   } from '../../api/recommend.js'
   import {
     mapMutations
@@ -70,7 +56,7 @@
   import Slider from '../../base/slider/slider.vue'
   import Scroll from '../../base/scroll/scroll.vue'
   import myLoading from '../../base/loading/loading.vue'
-  import {filterRecoment} from '../../commom/js/recommend'
+  import {filterRecoment,filterRecomentSongList} from '../../commom/js/recommend'
   
   export default {
     components: {
@@ -86,11 +72,14 @@
           allowSwiper: true,
   
         },
+        recommendsSongList:{
+        },
         showSonglist: false,
       }
     },
-    created() {
-      this._getRecommend();
+    async created() {
+      await this._getRecommend();
+      await this._getRecommendSongList();
       //  this._getDescList();
      
     },
@@ -104,17 +93,28 @@
         getRecommend().then((res) => {
           if (res.code === ERR_OK) {
             console.log(res.data);
+            debugger;
             this.recommends = filterRecoment(res.data);
             console.log(this.recommends);
           }
         });
+
       },
       _getDescList() {
         console.log('getDiscList');
         getDiscList().then((res) => {
-  
+          
           console.log(res);
         });
+      },
+      _getRecommendSongList(){
+        getRecommendSongList().then(res=>{
+              console.log('推荐歌单');
+              console.log(res);
+              this.recommendsSongList = filterRecomentSongList(res.data);
+              this.recommends.songList = this.recommendsSongList;
+            })
+            
       },
       changeXY(pos) {
         if (pos.y >= 0)

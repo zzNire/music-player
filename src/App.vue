@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" >
     <div class="main" >
       <myheader class="myheader"></myheader>
       <tab class='tab'></tab>
@@ -9,7 +9,7 @@
       <component :is="contentName" class="singer-content"></component>
     </transition>
     
-    <player class="player"></player>
+    <player class="player" ref="player"></player>
     <transition name='confirm'>
     <confirm  class='confirm-component' v-if='showConfirm'
     :title='showParam.title'
@@ -70,6 +70,17 @@
        
       }
     },
+    mounted(){
+      var player = document.getElementById('app');
+      var that = this;
+      function playBlank(){
+        var audio = that.$refs.player.$refs.audio;
+        audio.src = '../../assets/blank.mp3';
+        audio.load();
+        player.removeEventListener('touchstart',playBlank);
+      }
+      player.addEventListener('touchstart',playBlank);
+    },
     computed: {
       ...mapGetters([
         'contentName',
@@ -85,7 +96,7 @@
       selectNegative(){
         console.log(this.showConfirm.componentName);
           Bus.$emit('ConfirmNegative',this.showParam.componentName);
-      }
+      },
     }
   }
 

@@ -40,11 +40,11 @@ export default {
     methods:{
         _getDiscList(){
             getDisc(this.disc.id).then((res) => {
-          if (res.code === 0) {
-            console.log(res.cdlist);
-            this.discList = this.normailizeSongs(res.cdlist[0].songlist);
+          if (res.code === 200) {
+            console.log(res.data);
+            this.discList = this.normailizeSongs(res.data.tracks);
             this.discList.forEach((item)=>{
-                item.album = item.singer[0].name +' - '+ item.album;
+                item.album = item.singer +' - '+ item.album;
             })
             console.log( this.discList);
           }
@@ -54,10 +54,12 @@ export default {
             let newList = [];
             let songItem = {};
             list.forEach((song) => {
-                if(song.songid && song.albumid){
+                //if(song.songid && song.albumid){
                     newList.push(createSong(song))
-                }
+                //}
             });
+            console.log('歌单详情');
+            console.log(newList);
             return newList;
         }
     }

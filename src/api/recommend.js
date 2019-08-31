@@ -4,6 +4,8 @@ import {
   options
 } from './config.js'
 import axios from 'axios'
+
+//获取轮播图
 export function getRecommend() {
   const url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg';
   const data = Object.assign({}, commonParam, {
@@ -14,6 +16,23 @@ export function getRecommend() {
   })
   return jsonp(url, data, options)
 };
+
+
+//获取推荐歌单
+export function getRecommendSongList(){
+  const url = 'https://v1.itooi.cn/netease/songList/hot';
+
+  const data = {
+    cat:'全部',
+    pageSize:12,
+  }
+  return axios.get(url, {
+    params: data
+  }).then((res) => {
+    return Promise.resolve(res.data)
+  })
+}
+
 
 export function getDiscList() {
   const url = '/api/getDiscList'

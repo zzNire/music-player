@@ -145,7 +145,7 @@
   </transition>
 
    </div>
-    <audio ref="audio" v-if="currentSong" :src="currentSong.url" 
+    <audio ref="audio"  :src="currentSong && currentSong.url"
     @canplay="ready" 
     @error="error" 
     @timeupdate='setCurrentTIme'
@@ -270,6 +270,15 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
         setPlayList:'SET_PLAY_LIST',
         setSearchMode :'SET_SEARCHMODE',
       }),
+     /* playBlank(){
+        this.$refs.audio.src = '../../assets/blank.mp3';
+        this.$nextTick(()=>{
+          var play_promise = this.$refs.audio.play();
+        })
+        
+        
+
+      },*/
       enter(el, done) {
         const {
           x,
@@ -590,7 +599,8 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
      
     },
     watch: {
-      currentSong(newSong,oldSong) {
+      currentSong(newSong,oldSong) {            
+        debugger;
         if(!newSong){
           this.ifShowPlayList = false;
           this.ifShowBK = false;
@@ -610,6 +620,9 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
         //if(this.timer) clearTimeout(this.timer);
         //this.timer = setTimeout(() => {
           this.$nextTick(()=>{
+
+           // this.$refs.audio.src = newSong.url;
+            //this.$refs.audio.load();
             this.$refs.audio.play();
             this.getLyric();
           })
@@ -886,6 +899,7 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
 
   .header-song-name {
     font-size: 15px;
+    line-height:20px;
     margin:0 40px;
     margin-bottom: 7px;
    white-space :nowrap;

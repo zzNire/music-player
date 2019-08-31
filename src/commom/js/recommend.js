@@ -1,11 +1,22 @@
 function filterRecoment(data){
-    data.songList.forEach(recommend=>{
-        if (!~recommend.picUrl.indexOf('y.gtimg.cn')){
-            recommend.picUrl = `//y.gtimg.cn/music/photo_new/T006R300x300M000${recommend.pic_mid}.jpg?max_age=2592000`;
-        }
-        
-    })
+    data.songList = undefined;
     return data;
 }
 
-export {filterRecoment};
+class RecommentSongList{
+    constructor(data){
+        this.songListDesc = data.name
+        this.picUrl = data.coverImgUrl
+        this.id = data.id
+        this.accessnum = data.playCount
+        this.songListAuthor = data.creator.nickname
+        //this.pic_mid = 
+       // this.album_pic_mid = 
+    }
+}
+
+function filterRecomentSongList(data){
+    return data.map(list=> new RecommentSongList(list));
+}
+
+export {filterRecoment,filterRecomentSongList};
