@@ -145,7 +145,7 @@
   </transition>
 
    </div>
-    <audio ref="audio"  :src="currentSong && currentSong.url"
+    <audio ref="audio"  :src="(currentSong && currentSong.url) || require('../../assets/blank.mp3')"
     @canplay="ready" 
     @error="error" 
     @timeupdate='setCurrentTIme'
@@ -395,10 +395,12 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
         this.songReady = false;
       },
       ready(e) {
-        this.storePlayHistory(this.currentSong);
-        this.songReady = true;
-        console.log(this.$refs.audio.duration);
-        this.songLength = e.target.duration;
+        if(currentSong){
+          this.storePlayHistory(this.currentSong);
+          this.songReady = true;
+          console.log(this.$refs.audio.duration);
+          this.songLength = e.target.duration;
+        }
       },
       error() {
         this.songReady = true;

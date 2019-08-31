@@ -74,12 +74,12 @@
       var player = document.getElementById('app');
       var that = this;
       function playBlank(){
+        debugger;
         var audio = that.$refs.player.$refs.audio;
-        audio.src = '../../assets/blank.mp3';
-        audio.load();
+        audio.play();
         player.removeEventListener('touchstart',playBlank);
       }
-      player.addEventListener('touchstart',playBlank);
+      player.addEventListener('touchstart',playBlank,{passive:true});
     },
     computed: {
       ...mapGetters([
