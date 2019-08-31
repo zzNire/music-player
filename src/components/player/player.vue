@@ -145,7 +145,7 @@
   </transition>
 
    </div>
-    <audio ref="audio"  :src="(currentSong && currentSong.url) || require('../../assets/blank.mp3')"
+    <audio ref="audio"  :src="(currentSong && currentSong.url)"
     @canplay="ready" 
     @error="error" 
     @timeupdate='setCurrentTIme'

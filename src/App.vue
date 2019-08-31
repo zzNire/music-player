@@ -76,7 +76,13 @@
       function playBlank(){
         debugger;
         var audio = that.$refs.player.$refs.audio;
-        audio.play();
+        audio.addEventListener('canplaythrough',()=>{
+          audio.play();
+        })
+        
+        audio.src = require('./assets/blank.mp3');
+        audio.load();
+        
         player.removeEventListener('touchstart',playBlank);
       }
       player.addEventListener('touchstart',playBlank,{passive:true});
