@@ -395,7 +395,7 @@ import { setTimeout, setInterval, clearInterval, clearTimeout } from 'timers';
         this.songReady = false;
       },
       ready(e) {
-        if(currentSong){
+        if(this.currentSong){
           this.storePlayHistory(this.currentSong);
           this.songReady = true;
           console.log(this.$refs.audio.duration);
