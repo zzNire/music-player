@@ -98,7 +98,7 @@
         </div>
         <div class='song-item'>
           <p class="song-name" v-html="currentSong.songname"></p>
-          <p class="singer-name" v-html="currentSong.name"></p>
+          <p class="singer-name" v-html="currentSong.singer"></p>
         </div>
         <div class='player-contral'>
           <progress-circle class='progress-circle' :radius="30" :color="'#D44439'" :process="currentTime/songLength">

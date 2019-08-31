@@ -21,7 +21,7 @@
               <div class='list-text' :class="{'playing' : index === rightIndex}" @click="changeSong(song,index)">
                 <i class='icon-readingplan' v-show="index === rightIndex"></i>
                 <span class="song-detail">{{song.songname}}
-                  <span class="singer-name" v-html="' - '+song.singer[0].name" :class="{'playing' : index === rightIndex}">
+                  <span class="singer-name" v-html="' - '+song.singer" :class="{'playing' : index === rightIndex}">
                   </span></span>
               </div>
 
